@@ -1,0 +1,231 @@
+.blog-page {
+  min-height: 100vh;
+  padding: 48px 0;
+  background: var(--bg-base);
+}
+
+.blog-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ================= HEADER BLOG ================= */
+.blog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.blog-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.blog-header-text {
+  text-align: right;
+}
+
+.blog-header-text h1 {
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.blog-header-text p {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+/* ================= BUTTONS ================= */
+.blog-btn {
+  padding: 10px 18px;
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+}
+
+.blog-btn-secondary {
+  background: var(--bg-white);
+  border: 1.5px solid var(--border);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.blog-btn-secondary:hover {
+  background: var(--bg-subtle);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.blog-btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-primary);
+}
+
+.blog-btn-primary:hover {
+  background: var(--primary-dark);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(79, 110, 247, 0.4);
+}
+
+/* ================= GRID ARTICLES ================= */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* ================= POPUP "COMING SOON" ================= */
+
+/* Fond semi-transparent derrière le popup */
+.blog-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popup-fade-in 0.25s ease;
+}
+
+@keyframes popup-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Carte du popup */
+.blog-popup {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 48px;
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  animation: popup-slide-up 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popup-slide-up {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+.blog-popup-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.blog-popup-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.blog-popup-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+/* Barre de progression — dure 5s comme le setTimeout */
+.blog-popup-bar {
+  height: 4px;
+  background: #e8e4de;
+  border-radius: 100px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.blog-popup-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--primary, #4f6ef7);
+  border-radius: 100px;
+  transform-origin: left;
+  animation: popup-bar-drain 5s linear forwards;
+}
+
+@keyframes popup-bar-drain {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+/* Bouton fermer */
+.blog-popup-close {
+  background: none;
+  border: 1.5px solid #e8e4de;
+  border-radius: 100px;
+  padding: 8px 20px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.blog-popup-close:hover {
+  border-color: #e74c3c;
+  color: #e74c3c;
+  background: #fef2f2;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .blog-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .blog-header-text {
+    text-align: left;
+  }
+}
+
+@media (max-width: 560px) {
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-header-text h1 {
+    font-size: 32px;
+  }
+
+  .blog-actions {
+    width: 100%;
+  }
+
+  .blog-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .blog-popup {
+    padding: 28px 24px;
+  }
+}

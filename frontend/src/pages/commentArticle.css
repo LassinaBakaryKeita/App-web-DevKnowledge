@@ -1,0 +1,709 @@
+/* ============================================================
+   commentArticle.css — DevKnowledge Comment Page
+   Aesthetic: Editorial / Refined minimal with warm accents
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ── CSS Variables ── */
+:root {
+  --ca-bg: #f6f5f2;
+  --ca-surface: #ffffff;
+  --ca-surface-hover: #fdfcfb;
+  --ca-border: #e8e4de;
+  --ca-border-light: #f0ede8;
+
+  --ca-text-primary: #1a1916;
+  --ca-text-secondary: #6b6762;
+  --ca-text-muted: #a09c97;
+
+  --ca-accent: #c9622f;
+  --ca-accent-light: #f5ede7;
+  --ca-accent-hover: #b3541f;
+
+  --ca-success: #2f8f5e;
+  --ca-success-bg: #eaf5ef;
+  --ca-error: #c0392b;
+  --ca-error-bg: #fdf0ee;
+
+  --ca-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --ca-shadow-md: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+  --ca-shadow-lg: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+
+  --ca-radius-sm: 8px;
+  --ca-radius-md: 14px;
+  --ca-radius-lg: 20px;
+
+  --ca-font-display: 'Lora', Georgia, serif;
+  --ca-font-body: 'DM Sans', system-ui, sans-serif;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Root ── */
+.ca-root {
+  min-height: 100vh;
+  background-color: var(--ca-bg);
+  font-family: var(--ca-font-body);
+  color: var(--ca-text-primary);
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+
+/* ── Background Blobs ── */
+.ca-bg-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+}
+
+.ca-bg-blob--1 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, #f5d9c8 0%, transparent 70%);
+  top: -160px;
+  right: -120px;
+}
+
+.ca-bg-blob--2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #e8e2d8 0%, transparent 70%);
+  bottom: 80px;
+  left: -100px;
+}
+
+/* ── Container ── */
+.ca-container {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Header ── */
+.ca-header {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.ca-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ca-surface);
+  border: 1.5px solid var(--ca-border);
+  border-radius: 100px;
+  padding: 8px 18px;
+  font-family: var(--ca-font-body);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ca-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--ca-shadow-sm);
+  letter-spacing: 0.01em;
+}
+
+.ca-back-btn:hover {
+  color: var(--ca-accent);
+  border-color: var(--ca-accent);
+  background: var(--ca-accent-light);
+  box-shadow: 0 2px 8px rgba(201, 98, 47, 0.12);
+  transform: translateX(-2px);
+}
+
+.ca-back-icon {
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.ca-back-btn:hover .ca-back-icon {
+  transform: translateX(-2px);
+}
+
+.ca-header-content {
+  margin-top: 32px;
+}
+
+.ca-header-label {
+  font-family: var(--ca-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ca-accent);
+  margin-bottom: 10px;
+}
+
+.ca-article-title {
+  font-family: var(--ca-font-display);
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ca-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.ca-comment-count {
+  margin-top: 10px;
+  font-size: 13.5px;
+  color: var(--ca-text-muted);
+  font-weight: 400;
+}
+
+/* ── Layout ── */
+.ca-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── Compose Card ── */
+.ca-compose-section {
+  animation: ca-fadeUp 0.4s ease both;
+}
+
+.ca-compose-card {
+  background: var(--ca-surface);
+  border: 1.5px solid var(--ca-border);
+  border-radius: var(--ca-radius-lg);
+  box-shadow: var(--ca-shadow-md);
+  padding: 24px;
+  transition: box-shadow 0.2s ease;
+}
+
+.ca-compose-card:focus-within {
+  box-shadow: var(--ca-shadow-lg), 0 0 0 3px rgba(201, 98, 47, 0.08);
+  border-color: rgba(201, 98, 47, 0.3);
+}
+
+.ca-compose-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ca-compose-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.ca-compose-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ca-text-secondary);
+}
+
+.ca-textarea {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  border: 1.5px solid var(--ca-border);
+  border-radius: var(--ca-radius-md);
+  background: var(--ca-bg);
+  font-family: var(--ca-font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ca-text-primary);
+  padding: 14px 16px;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.ca-textarea::placeholder {
+  color: var(--ca-text-muted);
+  font-style: italic;
+}
+
+.ca-textarea:focus {
+  border-color: rgba(201, 98, 47, 0.4);
+  background: #fefefe;
+  box-shadow: 0 0 0 3px rgba(201, 98, 47, 0.06);
+}
+
+.ca-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ca-compose-footer {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ca-compose-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.ca-char-hint {
+  font-size: 12px;
+  color: var(--ca-text-muted);
+}
+
+/* Messages */
+.ca-msg {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 100px;
+}
+
+.ca-msg--success {
+  color: var(--ca-success);
+  background: var(--ca-success-bg);
+}
+
+.ca-msg--error {
+  color: var(--ca-error);
+  background: var(--ca-error-bg);
+}
+
+/* ── Submit Button ── */
+.ca-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ca-accent);
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  padding: 10px 22px;
+  font-family: var(--ca-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(201, 98, 47, 0.3);
+  white-space: nowrap;
+}
+
+.ca-submit-btn:hover:not(:disabled) {
+  background: var(--ca-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(201, 98, 47, 0.35);
+}
+
+.ca-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.ca-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.ca-btn-icon {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* ── Spinner ── */
+.ca-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: ca-spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ── Retry Button ── */
+.ca-retry-btn {
+  margin-top: 14px;
+  background: none;
+  border: 1.5px solid var(--ca-border);
+  border-radius: 100px;
+  padding: 7px 18px;
+  font-family: var(--ca-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ca-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ca-retry-btn:hover {
+  border-color: var(--ca-accent);
+  color: var(--ca-accent);
+  background: var(--ca-accent-light);
+}
+
+/* ── Loading ── */
+.ca-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 60px 0;
+  color: var(--ca-text-muted);
+  font-size: 14px;
+}
+
+.ca-loading-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.ca-loading-dots span {
+  width: 8px;
+  height: 8px;
+  background: var(--ca-accent);
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: ca-pulse 1.2s ease-in-out infinite;
+}
+
+.ca-loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.ca-loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+/* ── Empty State ── */
+.ca-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 72px 24px;
+  text-align: center;
+}
+
+.ca-empty-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.ca-empty-title {
+  font-family: var(--ca-font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ca-text-secondary);
+}
+
+.ca-empty-sub {
+  font-size: 14px;
+  color: var(--ca-text-muted);
+  margin-top: 2px;
+}
+
+.ca-empty-state--error .ca-empty-icon {
+  color: var(--ca-error);
+}
+
+.ca-empty-state--error p {
+  color: var(--ca-error);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ── Comment List ── */
+.ca-comments-section {
+  animation: ca-fadeUp 0.5s ease 0.1s both;
+}
+
+.ca-comment-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Comment Card ── */
+.ca-comment-card {
+  display: flex;
+  gap: 16px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--ca-border-light);
+  animation: ca-fadeUp 0.35s ease both;
+  transition: background 0.15s;
+}
+
+.ca-comment-card:first-child {
+  padding-top: 0;
+}
+
+.ca-comment-card:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ca-comment-card:hover .ca-comment-body {
+  background: var(--ca-surface-hover);
+  border-color: var(--ca-border);
+}
+
+/* Avatar column */
+.ca-comment-avatar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.ca-comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease;
+}
+
+.ca-comment-card:hover .ca-comment-avatar {
+  transform: scale(1.06);
+}
+
+.ca-thread-line {
+  width: 1.5px;
+  flex: 1;
+  min-height: 20px;
+  background: linear-gradient(to bottom, var(--ca-border), transparent);
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+/* Body */
+.ca-comment-body {
+  flex: 1;
+  background: var(--ca-surface);
+  border: 1.5px solid var(--ca-border-light);
+  border-radius: var(--ca-radius-md);
+  padding: 16px 18px;
+  box-shadow: var(--ca-shadow-sm);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.ca-comment-card:hover .ca-comment-body {
+  box-shadow: var(--ca-shadow-md);
+}
+
+.ca-comment-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.ca-comment-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ca-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.ca-comment-date {
+  font-size: 12px;
+  color: var(--ca-text-muted);
+  font-weight: 400;
+}
+
+.ca-comment-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ca-text-secondary);
+  word-break: break-word;
+}
+
+/* ── Animations ── */
+@keyframes ca-fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ca-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ca-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .ca-container {
+    padding: 0 16px;
+  }
+
+  .ca-header {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+
+  .ca-compose-card {
+    padding: 18px;
+  }
+
+  .ca-comment-body {
+    padding: 14px 14px;
+  }
+
+  .ca-comment-avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .ca-submit-btn {
+    padding: 9px 18px;
+    font-size: 13.5px;
+  }
+
+  .ca-compose-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ca-compose-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* ======================================================
+   AJOUTS : Edit / Delete — boutons d'action sur commentaire
+   ====================================================== */
+
+/* Conteneur des boutons Edit / Delete */
+.ca-comment-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: flex-end;
+}
+
+/* Bouton générique Edit/Delete */
+.ca-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 13px;
+  border-radius: 100px;
+  font-family: var(--ca-font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+/* Bouton Edit — style discret bleu */
+.ca-action-btn--edit {
+  background: #eef2ff;
+  color: #4f7df9;
+  border-color: #c7d4fd;
+}
+
+.ca-action-btn--edit:hover {
+  background: #4f7df9;
+  color: #ffffff;
+  border-color: #4f7df9;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(79, 125, 249, 0.25);
+}
+
+/* Bouton Delete — style rouge discret */
+.ca-action-btn--delete {
+  background: #fef2f2;
+  color: #e74c3c;
+  border-color: #fcc;
+}
+
+.ca-action-btn--delete:hover {
+  background: #e74c3c;
+  color: #ffffff;
+  border-color: #e74c3c;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.25);
+}
+
+/* Carte commentaire en cours de modification — légère surbrillance */
+.ca-comment-card--active .ca-comment-body {
+  border-color: rgba(79, 125, 249, 0.35);
+  box-shadow: 0 0 0 3px rgba(79, 125, 249, 0.07), var(--ca-shadow-md);
+}
+
+/* Formulaire en mode modification — bordure accentuée différente */
+.ca-compose-card--editing {
+  border-color: rgba(79, 125, 249, 0.35) !important;
+  box-shadow: var(--ca-shadow-lg), 0 0 0 3px rgba(79, 125, 249, 0.08) !important;
+}
+
+/* Bouton Annuler */
+.ca-cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1.5px solid var(--ca-border);
+  border-radius: 100px;
+  padding: 9px 16px;
+  font-family: var(--ca-font-body);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ca-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ca-cancel-btn:hover {
+  border-color: #e74c3c;
+  color: #e74c3c;
+  background: #fef2f2;
+}
+
+/* Bouton Update Comment — couleur bleue au lieu de terracotta */
+.ca-submit-btn--update {
+  background: #4f7df9 !important;
+  box-shadow: 0 3px 10px rgba(79, 125, 249, 0.3) !important;
+}
+
+.ca-submit-btn--update:hover:not(:disabled) {
+  background: #3a68e0 !important;
+  box-shadow: 0 5px 16px rgba(79, 125, 249, 0.35) !important;
+}
