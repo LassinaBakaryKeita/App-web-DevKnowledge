@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import './CreateArticle.css';
+import './CreateArticle.css'; //importation du fichier css
 
 function CreateArticle() {
   const navigate = useNavigate();
