@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 // Génère un token JWT valable 3 jours
 const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET || 'VOTRE_PHRASE_SECRETE_ICI', {
+    return jwt.sign({ id }, process.env.JWT_SECRET , {
         expiresIn: 3 * 24 * 60 * 60
     });
 };
