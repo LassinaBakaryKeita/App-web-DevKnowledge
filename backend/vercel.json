@@ -12,11 +12,11 @@
       "dest": "/api/index.js"
     }
   ],
-  
+
   "rewrites":[
     {
       "source": "/(.*)",
-      "destination": "/api"
+      "destination": "/api/index.js"
     }
   ]
 }
