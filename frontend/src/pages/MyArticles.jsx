@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './MyArticles.css';
 
+const API_BASE = 'https://backend-app-web-dev-knowledge.vercel.app';
+
 function MyArticles() {
   const navigate = useNavigate();
   const [myArticles, setMyArticles] = useState([]);
@@ -15,7 +17,7 @@ function MyArticles() {
 
   const fetchMyArticles = async () => {
     try {
-      const res = await fetch(`https://backend-app-web-dev-knowledge.vercel.app/api/article/mine/${userId}`, {
+      const res = await fetch(`${API_BASE}/api/article/mine/${userId}`, {
         method: 'GET',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -33,12 +35,10 @@ function MyArticles() {
     // eslint-disable-next-line
   }, []);
 
-  // Redirige vers le formulaire pré-rempli pour modifier l'article
   const handleEdit = (article) => {
     navigate('/createArticle', { state: { article } });
   };
 
-  // Supprime l'article après confirmation, puis retire la carte de la liste
   const handleDelete = async (articleId) => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this article? This action cannot be undone.'
@@ -46,7 +46,7 @@ function MyArticles() {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`https://backend-app-web-dev-knowledge.vercel.app/api/article/delete/${articleId}`, {
+      const res = await fetch(`${API_BASE}/api/article/delete/${articleId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -86,8 +86,12 @@ function MyArticles() {
               </div>
             ) : myArticles.length > 0 ? (
               myArticles.map((article) => {
+                // URL Cloudinary complète si commence par "http",
+                // sinon ancien chemin local préfixé avec le backend
                 const imageUrl = article.image
-                  ? `https://backend-app-web-dev-knowledge.vercel.app/${article.image}`
+                  ? article.image.startsWith('http')
+                    ? article.image
+                    : `${API_BASE}/${article.image}`
                   : null;
 
                 return (
