@@ -1,35 +1,39 @@
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('../backend/config/db'); 
-require('dotenv').config();
 
-const userRoutes = require('../backend/routes/userRoutes');
-const articleRoutes = require('../backend/routes/articleRoutes');
-const likeRoute = require('../backend/routes/likeRoutes');
-const commentRoute = require('../backend/routes/commentRoutes');
+
+const connectDB = require('../config/db');
+require('dotenv').config({ path: '../config/.env' });
+
+const userRoutes = require('../routes/userRoutes');
+const articleRoutes = require('../routes/articleRoutes');
+const likeRoute = require('../routes/likeRoutes');
+const commentRoute = require('../routes/commentRoutes');
 
 const app = express();
 
-// Connexion DB
+// Connexion à MongoDB Atlas
 connectDB();
 
 // Middlewares
 app.use(cors({
-    origin: "https://app-web-dev-knowledge.vercel.app"
+    origin: 'https://app-web-dev-knowledge.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use(express.json());
 
+// Route de test 
 app.get('/', (req, res) => {
-    res.send('Backend is running!');
+    res.send('Backend DevKnowledge is running!');
 });
 
-// Routes
+// Déclaration des routes API
 app.use('/api/user', userRoutes);
 app.use('/api/article', articleRoutes);
 app.use('/api/like', likeRoute);
 app.use('/api/comment', commentRoute);
 
-//module.exports = app;
-
-export default  app; 
+// Export CommonJS pour Vercel (serverless)
+module.exports = app;
