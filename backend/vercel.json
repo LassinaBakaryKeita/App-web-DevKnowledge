@@ -2,7 +2,8 @@
   "version": 2,
   "builds":[
     {
-      "src": "/api/(.*)"
+      "src": "/api/(.*)",
+      "use":"@vercel/node"
     }
   ],
   "routes": [
