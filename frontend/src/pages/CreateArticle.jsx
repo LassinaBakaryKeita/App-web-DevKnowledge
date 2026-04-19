@@ -50,7 +50,7 @@ function CreateArticle() {
 
       if (isEditMode) {
         res = await fetch(
-          `http://localhost:5000/api/article/update/${articleToEdit._id}`,
+          `https://backend-app-web-dev-knowledge.vercel.app/api/article/update/${articleToEdit._id}`,
           {
             method: 'PUT',
             headers: { Authorization: `Bearer ${token}` },
@@ -58,7 +58,7 @@ function CreateArticle() {
           }
         );
       } else {
-        res = await fetch('http://localhost:5000/api/article/create', {
+        res = await fetch('https://backend-app-web-dev-knowledge.vercel.app/api/article/create', {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
           body: data,

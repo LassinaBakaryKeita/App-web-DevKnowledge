@@ -22,7 +22,7 @@ function DetailedInformationArticle() {
     }
 
     // Gestion du chemin de l'image pour le background
-    const imageUrl = `http://localhost:5000/${article.image}`;
+    const imageUrl = `https://backend-app-web-dev-knowledge.vercel.app/${article.image}`;
 
     return (
         <div className="detail-page">

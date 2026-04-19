@@ -15,7 +15,7 @@ function MyArticles() {
 
   const fetchMyArticles = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/article/mine/${userId}`, {
+      const res = await fetch(`https://backend-app-web-dev-knowledge.vercel.app/api/article/mine/${userId}`, {
         method: 'GET',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -46,7 +46,7 @@ function MyArticles() {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/article/delete/${articleId}`, {
+      const res = await fetch(`https://backend-app-web-dev-knowledge.vercel.app/api/article/delete/${articleId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -87,7 +87,7 @@ function MyArticles() {
             ) : myArticles.length > 0 ? (
               myArticles.map((article) => {
                 const imageUrl = article.image
-                  ? `http://localhost:5000/${article.image}`
+                  ? `https://backend-app-web-dev-knowledge.vercel.app/${article.image}`
                   : null;
 
                 return (

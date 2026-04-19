@@ -13,7 +13,7 @@ function Blog() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/article/all');
+        const res = await fetch('https://backend-app-web-dev-knowledge.vercel.app/api/article/all');
         const data = await res.json();
         if (res.ok) setArticles(data);
       } catch (error) {

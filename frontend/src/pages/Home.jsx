@@ -11,7 +11,7 @@ function Home() {
     const [latestArticles, setLatestArticles] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/article/all")
+        fetch("https://backend-app-web-dev-knowledge.vercel.app/api/article/all")
             .then(res => res.json())
             .then(data => setLatestArticles(data.slice(0, 3))) // On ne prend que les 3 derniers
             .catch(err => console.error(err));

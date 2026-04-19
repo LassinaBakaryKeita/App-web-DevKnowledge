@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./commentArticle.css";
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "https://backend-app-web-dev-knowledge.vercel.app/api";
 
 function formatDate(dateStr) {
   const date = new Date(dateStr);
