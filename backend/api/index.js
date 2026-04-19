@@ -30,5 +30,6 @@ app.use('/api/article', articleRoutes);
 app.use('/api/like', likeRoute);
 app.use('/api/comment', commentRoute);
 
+//module.exports = app;
 
-module.exports = app;
+export default  app; 
