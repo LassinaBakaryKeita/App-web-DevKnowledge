@@ -11,8 +11,10 @@ const commentRoute = require('../routes/commentRoutes');
 
 const app = express();
 
+//Connexion à la base de donnée
 connectDB();
 
+//Middlewares
 app.use(cors({
     origin: 'https://app-web-dev-knowledge.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

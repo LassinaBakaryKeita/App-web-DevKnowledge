@@ -37,7 +37,6 @@ userSchema.pre("save", async function() { // Retrait de "next" ici
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
-        // Plus besoin d'appeler next() ici, la fin de la fonction async suffit
     } catch (err) {
         throw err; // On lance l'erreur pour que le bloc catch du contrôleur la récupère
     }
