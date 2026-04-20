@@ -27,7 +27,7 @@ function HeroSection() {
             <Link to="/blog" className="hero-btn-primary">
               Explore Articles →
             </Link>
-            <a href="/register" className="hero-btn-secondary">
+            <a href="/createArticle" className="hero-btn-secondary">
               ✍️ Start Writing
             </a>
           </div>
