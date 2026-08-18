@@ -1,24 +1,25 @@
 import './About.css';
+import { Sparkles, Brain, Users, Rocket, Unlock, ArrowRight } from 'lucide-react';
 
 function About() {
   const values = [
     {
-      icon: '🧠',
+      icon: <Brain size={20} className="text-indigo-600" />,
       title: 'Deep Technical Content',
       desc: 'We prioritize substance over surface-level tutorials.'
     },
     {
-      icon: '🤝',
+      icon: <Users size={20} className="text-cyan-600" />,
       title: 'Community First',
       desc: 'Built around peer feedback and knowledge exchange.'
     },
     {
-      icon: '🚀',
+      icon: <Rocket size={20} className="text-violet-600" />,
       title: 'Career Growth',
       desc: 'Writing publicly accelerates your professional visibility.'
     },
     {
-      icon: '🔓',
+      icon: <Unlock size={20} className="text-emerald-600" />,
       title: 'Open & Inclusive',
       desc: 'Every developer — junior or staff — has a voice here.'
     },
@@ -30,7 +31,10 @@ function About() {
 
         {/* Left: Text */}
         <div className="about-content">
-          <span className="about-label">✦ Our Mission</span>
+          <span className="about-label">
+            <Sparkles size={14} />
+            <span>Our Mission</span>
+          </span>
 
           <h2 className="about-title">
             A knowledge hub built by engineers, for engineers
@@ -49,7 +53,8 @@ function About() {
           </p>
 
           <a href="/about" className="about-cta">
-            Learn more about us →
+            <span>Learn more about us</span>
+            <ArrowRight size={16} />
           </a>
         </div>
 
@@ -57,7 +62,7 @@ function About() {
         <div className="about-values">
           {values.map((v, i) => (
             <div className="about-value-card" key={i}>
-              <span className="about-value-icon">{v.icon}</span>
+              <div className="about-value-icon">{v.icon}</div>
               <div className="about-value-title">{v.title}</div>
               <div className="about-value-desc">{v.desc}</div>
             </div>

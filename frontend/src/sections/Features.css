@@ -89,15 +89,15 @@
 }
 
 .feature-icon-wrap {
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
   margin-bottom: 20px;
   transition: var(--transition);
+  flex-shrink: 0;
 }
 
 .feature-card:hover .feature-icon-wrap {
@@ -106,27 +106,33 @@
 
 /* Icon color variants */
 .feature-icon-blue {
-  background: var(--primary-light);
+  background: #eef2ff;
+  color: #4f46e5;
 }
 
 .feature-icon-purple {
-  background: var(--accent-light);
+  background: #f3e8ff;
+  color: #7c3aed;
 }
 
 .feature-icon-green {
-  background: #EDFAF4;
+  background: #dcfce7;
+  color: #16a34a;
 }
 
 .feature-icon-orange {
-  background: #FFF3E8;
+  background: #fff7ed;
+  color: #ea580c;
 }
 
 .feature-icon-pink {
-  background: #FEF0F4;
+  background: #fdf2f8;
+  color: #db2777;
 }
 
 .feature-icon-teal {
-  background: #E8FAF8;
+  background: #ecfeff;
+  color: #0891b2;
 }
 
 .feature-name {

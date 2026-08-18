@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./commentArticle.css";
+import { ArrowLeft, Send, X, Pencil, Trash2, MessageSquare, AlertTriangle } from "lucide-react";
 
 const API_BASE = "https://backend-app-web-dev-knowledge.vercel.app/api";
 
@@ -201,7 +202,7 @@ export default function CommentArticle() {
         {/* Header */}
         <header className="ca-header">
           <button className="ca-back-btn" onClick={() => navigate(-1)}>
-            <span className="ca-back-icon">←</span>
+            <ArrowLeft size={16} />
             <span>Back</span>
           </button>
           <div className="ca-header-content">
@@ -259,7 +260,8 @@ export default function CommentArticle() {
                   {/* Bouton Annuler — visible uniquement en mode modification */}
                   {editingCommentId && (
                     <button className="ca-cancel-btn" onClick={handleCancelEdit}>
-                      ✕ Cancel
+                      <X size={15} />
+                      <span>Cancel</span>
                     </button>
                   )}
 
@@ -276,13 +278,13 @@ export default function CommentArticle() {
                       </>
                     ) : editingCommentId ? (
                       <>
-                        <span className="ca-btn-icon">✎</span>
-                        Update Comment
+                        <Pencil size={15} />
+                        <span>Update Comment</span>
                       </>
                     ) : (
                       <>
-                        <span className="ca-btn-icon">✦</span>
-                        Post Comment
+                        <Send size={15} />
+                        <span>Post Comment</span>
                       </>
                     )}
                   </button>
@@ -302,13 +304,13 @@ export default function CommentArticle() {
               </div>
             ) : error ? (
               <div className="ca-empty-state ca-empty-state--error">
-                <div className="ca-empty-icon">⚠</div>
+                <div className="ca-empty-icon"><AlertTriangle size={32} strokeWidth={1.5} /></div>
                 <p>{error}</p>
                 <button className="ca-retry-btn" onClick={fetchComments}>Retry</button>
               </div>
             ) : comments.length === 0 ? (
               <div className="ca-empty-state">
-                <div className="ca-empty-icon">💬</div>
+                <div className="ca-empty-icon"><MessageSquare size={32} strokeWidth={1.5} /></div>
                 <p className="ca-empty-title">No comments yet</p>
                 <p className="ca-empty-sub">Be the first to share your thoughts!</p>
               </div>
@@ -372,14 +374,16 @@ export default function CommentArticle() {
                               onClick={() => handleEditClick(comment)}
                               title="Edit comment"
                             >
-                              ✎ Edit
+                              <Pencil size={14} />
+                              <span>Edit</span>
                             </button>
                             <button
                               className="ca-action-btn ca-action-btn--delete"
                               onClick={() => handleDeleteClick(comment._id)}
                               title="Delete comment"
                             >
-                              🗑 Delete
+                              <Trash2 size={14} />
+                              <span>Delete</span>
                             </button>
                           </div>
                         )}

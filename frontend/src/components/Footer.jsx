@@ -1,6 +1,7 @@
 import './Footer.css';
 import { Link } from "react-router-dom";
-import { FaTiktok, FaFacebook,FaGithub, FaLinkedinIn } from "react-icons/fa";
+import { FaTiktok, FaFacebook, FaGithub, FaLinkedinIn } from "react-icons/fa";
+import { Zap } from "lucide-react";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,7 +13,9 @@ function Footer() {
         {/* Brand column */}
         <div className="footer-brand">
           <Link to="/" className="footer-logo">
-            <div className="footer-logo-icon">⚡</div>
+            <div className="footer-logo-icon">
+              <Zap size={18} strokeWidth={2.5} />
+            </div>
             <span className="footer-logo-text">Dev<span>Knowledge</span></span>
           </Link>
 

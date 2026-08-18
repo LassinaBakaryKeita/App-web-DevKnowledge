@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './createArticle.css';
+import { ArrowLeft, Edit3, Sparkles, Pencil, Send } from 'lucide-react';
 
 function CreateArticle() {
   const navigate = useNavigate();
@@ -85,17 +86,25 @@ function CreateArticle() {
         <div className="create-container">
 
           <div className="create-back-nav">
-            <Link to="/blog" className="create-back-btn">← Back to Blog</Link>
+            <Link to="/blog" className="create-back-btn">
+              <ArrowLeft size={16} />
+              <span>Back to Blog</span>
+            </Link>
           </div>
 
-          <h1 className="create-title">
-            {isEditMode ? 'Edit Article ✏️' : 'Create New Article ✨'}
-          </h1>
-          <p className="create-subtitle">
-            {isEditMode
-              ? 'Update your article below'
-              : 'Share your knowledge with the community'}
-          </p>
+          <div className="create-page-header">
+            <div className="create-page-icon">
+              {isEditMode ? <Edit3 size={28} /> : <Sparkles size={28} />}
+            </div>
+            <h1 className="create-title">
+              {isEditMode ? 'Edit Article' : 'Create New Article'}
+            </h1>
+            <p className="create-subtitle">
+              {isEditMode
+                ? 'Update your article below'
+                : 'Share your knowledge with the community'}
+            </p>
+          </div>
 
           <form className="create-form" onSubmit={handleSubmit}>
 
@@ -164,7 +173,17 @@ function CreateArticle() {
             </div>
 
             <button type="submit" className="create-submit">
-              {isEditMode ? 'Update Article ✏️' : 'Publish Article 🚀'}
+              {isEditMode ? (
+                <>
+                  <Pencil size={18} />
+                  <span>Update Article</span>
+                </>
+              ) : (
+                <>
+                  <Send size={18} />
+                  <span>Publish Article</span>
+                </>
+              )}
             </button>
 
           </form>
@@ -176,3 +195,5 @@ function CreateArticle() {
 }
 
 export default CreateArticle;
+
+

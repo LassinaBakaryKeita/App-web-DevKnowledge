@@ -41,9 +41,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(79, 110, 247, 0.3);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  color: #fff;
 }
 
 .navbar-logo-text {
@@ -99,14 +99,17 @@
 }
 
 .navbar-btn-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
-  padding: 8px 18px;
-  border-radius: var(--radius-full);
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
   text-decoration: none;
   transition: var(--transition);
-  border: 1.5px solid var(--border);
+  border: 1px solid var(--border);
   background: transparent;
   cursor: pointer;
   font-family: var(--font-body);
@@ -119,22 +122,25 @@
 }
 
 .navbar-btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 14px;
   font-weight: 600;
   color: #fff;
-  padding: 9px 20px;
-  border-radius: var(--radius-full);
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
   text-decoration: none;
   background: var(--primary);
   transition: var(--transition);
-  box-shadow: 0 4px 14px rgba(79, 110, 247, 0.3);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
   white-space: nowrap;
 }
 
 .navbar-btn-cta:hover {
-  background: var(--primary-dark);
+  background: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(79, 110, 247, 0.4);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
   color: #fff;
 }
 
@@ -193,10 +199,13 @@
 }
 
 .navbar-mobile-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
   color: var(--text-secondary);
   padding: 8px 12px 12px;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border);
   margin-bottom: 6px;
 }
 
@@ -205,10 +214,12 @@
   font-weight: 500;
   color: var(--text-primary);
   text-decoration: none;
-  padding: 12px 14px;
+  padding: 11px 14px;
   border-radius: var(--radius-sm);
   transition: var(--transition);
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: none;
   border: none;
   text-align: left;
@@ -227,14 +238,14 @@
   margin-top: 8px;
   background: var(--primary);
   color: #fff !important;
-  text-align: center;
-  border-radius: var(--radius-full);
+  justify-content: center;
+  border-radius: var(--radius-md);
   padding: 12px 20px;
   font-weight: 600;
 }
 
 .navbar-mobile-link--cta:hover {
-  background: var(--primary-dark) !important;
+  background: var(--primary-hover) !important;
   color: #fff !important;
 }
 

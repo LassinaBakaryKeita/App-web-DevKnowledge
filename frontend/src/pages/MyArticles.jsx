@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './MyArticles.css';
+import { ArrowLeft, FileText, Pencil, Trash2, FilePlus } from 'lucide-react';
 
 const API_BASE = 'https://backend-app-web-dev-knowledge.vercel.app';
 
@@ -71,7 +72,10 @@ function MyArticles() {
         <div className="my-articles-container">
 
           <div className="my-articles-back-nav">
-            <Link to="/blog" className="my-articles-back-btn">← Back to Blog</Link>
+            <Link to="/blog" className="my-articles-back-btn">
+              <ArrowLeft size={16} />
+              <span>Back to Blog</span>
+            </Link>
           </div>
 
           <h1 className="my-articles-title">My Articles</h1>
@@ -100,7 +104,9 @@ function MyArticles() {
                       {imageUrl ? (
                         <img src={imageUrl} alt={article.title} />
                       ) : (
-                        <div className="my-article-image-placeholder">📄</div>
+                        <div className="my-article-image-placeholder">
+                          <FileText size={32} strokeWidth={1.5} />
+                        </div>
                       )}
                     </div>
 
@@ -120,13 +126,15 @@ function MyArticles() {
                         className="my-article-btn my-article-btn--edit"
                         onClick={() => handleEdit(article)}
                       >
-                        ✎ Edit
+                        <Pencil size={15} />
+                        <span>Edit</span>
                       </button>
                       <button
                         className="my-article-btn my-article-btn--delete"
                         onClick={() => handleDelete(article._id)}
                       >
-                        🗑 Delete
+                        <Trash2 size={15} />
+                        <span>Delete</span>
                       </button>
                     </div>
                   </div>
@@ -134,10 +142,10 @@ function MyArticles() {
               })
             ) : (
               <div className="my-articles-empty">
-                <span className="my-articles-empty-icon">📝</span>
+                <FilePlus size={48} strokeWidth={1.2} className="my-articles-empty-icon" />
                 <p>You haven't published any articles yet.</p>
                 <Link to="/createArticle" className="my-articles-empty-btn">
-                  Create my first article →
+                  Create my first article
                 </Link>
               </div>
             )}
@@ -150,3 +158,4 @@ function MyArticles() {
 }
 
 export default MyArticles;
+

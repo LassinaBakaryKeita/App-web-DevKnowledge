@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import './Login.css';
+import { Zap, ArrowLeft, UserCheck, UserPlus } from 'lucide-react';
 
 function Login() {
   const [searchParams] = useSearchParams();
@@ -77,7 +78,9 @@ function Login() {
   return (
     <div className="auth-page">
       <a href="/" className="auth-logo-link">
-        <div className="auth-logo-icon">⚡</div>
+        <div className="auth-logo-icon">
+          <Zap size={20} strokeWidth={2.5} />
+        </div>
         <span className="auth-logo-text">Dev<span>Knowledge</span></span>
       </a>
 
@@ -104,7 +107,10 @@ function Login() {
 
       {activeTab === 'login' && (
         <div className="auth-card">
-          <h1 className="auth-card-title">Welcome back 👋</h1>
+          <h1 className="auth-card-title">
+            <UserCheck size={22} />
+            <span>Welcome back</span>
+          </h1>
           <p className="auth-card-subtitle">
             Don't have an account{' '}
             <a href="#" onClick={() => setActiveTab('register')}>Sign up free</a>
@@ -139,7 +145,10 @@ function Login() {
 
       {activeTab === 'register' && (
         <div className="auth-card">
-          <h1 className="auth-card-title">Create your account ✨</h1>
+          <h1 className="auth-card-title">
+            <UserPlus size={22} />
+            <span>Create your account</span>
+          </h1>
           <p className="auth-card-subtitle">
             Already have an account{' '}
             <a href="#" onClick={() => setActiveTab('login')}>Login here</a>
@@ -184,7 +193,10 @@ function Login() {
       )}
 
       <p className="auth-footer-note">
-        <a href="/">← Back to DevKnowledge</a>
+        <a href="/">
+          <ArrowLeft size={14} />
+          <span>Back to DevKnowledge</span>
+        </a>
       </p>
     </div>
   );

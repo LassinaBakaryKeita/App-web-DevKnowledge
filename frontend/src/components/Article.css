@@ -4,7 +4,7 @@
 
 .article-card {
   background: var(--bg-white);
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
   transition: var(--transition);
@@ -14,9 +14,9 @@
 }
 
 .article-card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-5px);
-  border-color: rgba(79, 110, 247, 0.15);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  border-color: var(--border-hover);
 }
 
 /* --- Image --- */
@@ -46,8 +46,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48px;
-  background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+  color: var(--text-muted);
+  background: var(--bg-subtle);
 }
 
 /* Tag badge on image */
@@ -167,17 +167,32 @@
 }
 
 .article-card-stat {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 5px;
   font-size: 13px;
   color: var(--text-muted);
   transition: var(--transition);
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-body);
 }
 
 .article-card-stat:hover {
   color: var(--primary);
-  cursor: pointer;
+  background: var(--primary-light);
+}
+
+.article-card-stat--liked {
+  color: #ef4444;
+}
+
+.article-card-stat--liked:hover {
+  color: #dc2626;
+  background: #fff1f2;
 }
 
 .article-card-read-btn {

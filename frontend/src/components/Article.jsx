@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Article.css';
+import { Heart, MessageSquare, ArrowRight, FileText } from 'lucide-react';
 
 const API_BASE = 'https://backend-app-web-dev-knowledge.vercel.app';
 
@@ -119,7 +120,9 @@ function Article({ article }) {
         {imageUrl ? (
           <img src={imageUrl} alt={title} />
         ) : (
-          <div className="article-card-image-placeholder">📄</div>
+          <div className="article-card-image-placeholder">
+            <FileText size={36} strokeWidth={1.5} />
+          </div>
         )}
         <span className="article-card-tag">{tag}</span>
       </div>
@@ -138,25 +141,34 @@ function Article({ article }) {
         <div className="article-card-title">{title}</div>
         {shortDescription && (
           <div className="article-card-excerpt">
-            {shortDescription.substring(0, 150)}...
+            {shortDescription.substring(0, 140)}...
           </div>
         )}
 
         <div className="article-card-footer">
           <div className="article-card-stats">
-            <span className="article-card-stat" onClick={handleLike} style={{ cursor: 'pointer' }}>
-              {isLiked ? '❤️' : '🤍'} {likesCount}
-            </span>
+            <button
+              className={`article-card-stat ${isLiked ? 'article-card-stat--liked' : ''}`}
+              onClick={handleLike}
+              title={isLiked ? "Unlike" : "Like"}
+            >
+              <Heart size={16} fill={isLiked ? "currentColor" : "none"} />
+              <span>{likesCount}</span>
+            </button>
+
             <button
               className="article-card-stat"
               onClick={handleCommentClick}
-              style={{ cursor: 'pointer', background: 'none', border: 'none', padding: 0, font: 'inherit' }}
+              title="Comments"
             >
-              💬 {commentsCount}
+              <MessageSquare size={16} />
+              <span>{commentsCount}</span>
             </button>
           </div>
+
           <Link to={`/article/${_id}`} state={{ article }} className="article-card-read-btn">
-            Read →
+            <span>Read</span>
+            <ArrowRight size={15} />
           </Link>
         </div>
       </div>

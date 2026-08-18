@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import Article from '../components/Article';
 import './Blog.css';
 import { Link } from 'react-router-dom';
+import { Search, BookOpen, PlusCircle, X } from 'lucide-react';
 
 function Blog() {
   const [articles, setArticles] = useState([]);
@@ -41,7 +42,9 @@ function Blog() {
           {showPopup && (
             <div className="blog-popup-overlay">
               <div className="blog-popup">
-                <div className="blog-popup-icon">🔍</div>
+                <div className="blog-popup-icon">
+                  <Search size={28} />
+                </div>
                 <h3 className="blog-popup-title">Coming Soon</h3>
                 <p className="blog-popup-text">
                   The search feature is currently under development.<br />
@@ -51,7 +54,8 @@ function Blog() {
                   <div className="blog-popup-bar-fill" />
                 </div>
                 <button className="blog-popup-close" onClick={() => setShowPopup(false)}>
-                  ✕ Close
+                  <X size={16} />
+                  <span>Close</span>
                 </button>
               </div>
             </div>
@@ -60,10 +64,17 @@ function Blog() {
           <div className="blog-header">
             <div className="blog-actions">
               <button className="blog-btn blog-btn-secondary" onClick={handleSearchClick}>
-                🔍 Search
+                <Search size={16} />
+                <span>Search</span>
               </button>
-              <Link to="/myArticles" className="blog-btn blog-btn-secondary">📄 My Articles</Link>
-              <Link to="/createArticle" className="blog-btn blog-btn-primary">➕ Add Article</Link>
+              <Link to="/myArticles" className="blog-btn blog-btn-secondary">
+                <BookOpen size={16} />
+                <span>My Articles</span>
+              </Link>
+              <Link to="/createArticle" className="blog-btn blog-btn-primary">
+                <PlusCircle size={16} />
+                <span>Add Article</span>
+              </Link>
             </div>
             <div className="blog-header-text">
               <h1>All Articles</h1>

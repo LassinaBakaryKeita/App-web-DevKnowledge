@@ -1,5 +1,6 @@
 import './LatestArticles.css';
 import Article from '../components/Article';
+import { Newspaper, ArrowRight } from 'lucide-react';
 
 // Articles affichés en fallback si aucune donnée n'est encore disponible
 const SAMPLE_ARTICLES = [
@@ -43,14 +44,18 @@ function LatestArticles({ articles }) {
       <div className="latest-articles-inner">
         <div className="latest-articles-header">
           <div className="latest-articles-heading">
-            <span className="latest-articles-label">📰 Latest articles</span>
+            <span className="latest-articles-label">
+              <Newspaper size={14} />
+              <span>Latest articles</span>
+            </span>
             <h2 className="latest-articles-title">Community news</h2>
             <p className="latest-articles-desc">
               Discover what developers are publishing right now.
             </p>
           </div>
           <a href="/Blog" className="latest-articles-view-all">
-            See all articles →
+            <span>See all articles</span>
+            <ArrowRight size={16} />
           </a>
         </div>
 

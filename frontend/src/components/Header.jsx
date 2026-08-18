@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './Header.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { Zap, PenSquare, LogOut, ArrowRight, User } from 'lucide-react';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -25,7 +26,9 @@ function Navbar() {
 
         {/* Logo */}
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <div className="navbar-logo-icon">⚡</div>
+          <div className="navbar-logo-icon">
+            <Zap size={18} strokeWidth={2.5} />
+          </div>
           <span className="navbar-logo-text">Dev<span>Knowledge</span></span>
         </Link>
 
@@ -48,16 +51,21 @@ function Navbar() {
                 Welcome, <strong>{userName}</strong>
               </span>
               <Link to="/createArticle" className="navbar-btn-cta" onClick={closeMenu}>
-                Write an Article ✍️
+                <PenSquare size={16} />
+                <span>Write Article</span>
               </Link>
               <button onClick={handleLogout} className="navbar-btn-login">
-                Log out
+                <LogOut size={15} />
+                <span>Log out</span>
               </button>
             </>
           ) : (
             <>
               <Link to="/login" className="navbar-btn-login" onClick={closeMenu}>Log in</Link>
-              <Link to="/login" className="navbar-btn-cta" onClick={closeMenu}>Get Started →</Link>
+              <Link to="/login" className="navbar-btn-cta" onClick={closeMenu}>
+                <span>Get Started</span>
+                <ArrowRight size={16} />
+              </Link>
             </>
           )}
         </div>
@@ -81,7 +89,8 @@ function Navbar() {
         {/* Nom de l'utilisateur si connecté */}
         {token && (
           <div className="navbar-mobile-user">
-            👋 Welcome, <strong>{userName}</strong>
+            <User size={16} />
+            <span>Welcome, <strong>{userName}</strong></span>
           </div>
         )}
 
@@ -94,10 +103,12 @@ function Navbar() {
               My Articles
             </Link>
             <Link to="/createArticle" className="navbar-mobile-link navbar-mobile-link--cta" onClick={closeMenu}>
-              ✍️ Write an Article
+              <PenSquare size={16} />
+              <span>Write an Article</span>
             </Link>
             <button className="navbar-mobile-link navbar-mobile-link--logout" onClick={handleLogout}>
-              Log out
+              <LogOut size={16} />
+              <span>Log out</span>
             </button>
           </>
         )}
@@ -106,7 +117,8 @@ function Navbar() {
           <>
             <Link to="/login" className="navbar-mobile-link" onClick={closeMenu}>Log in</Link>
             <Link to="/login" className="navbar-mobile-link navbar-mobile-link--cta" onClick={closeMenu}>
-              Get Started →
+              <span>Get Started</span>
+              <ArrowRight size={16} />
             </Link>
           </>
         )}

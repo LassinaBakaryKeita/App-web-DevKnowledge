@@ -2,6 +2,7 @@ import { useLocation, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './detailedInformationArticle.css';
+import { ArrowLeft } from 'lucide-react';
 
 const API_BASE = 'https://backend-app-web-dev-knowledge.vercel.app';
 
@@ -40,7 +41,7 @@ function DetailedInformationArticle() {
                 <div className="detail-hero-overlay" />
                 <div className="detail-hero-content container">
                     <Link to="/blog" className="detail-back-link">
-                        <span className="detail-back-arrow">←</span>
+                        <ArrowLeft size={18} />
                         <span>Back to Blog</span>
                     </Link>
                     <div className="detail-hero-text">
