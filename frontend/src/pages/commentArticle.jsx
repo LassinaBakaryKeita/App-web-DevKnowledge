@@ -1,401 +1,226 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import "./commentArticle.css";
-import { ArrowLeft, Send, X, Pencil, Trash2, MessageSquare, AlertTriangle } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import './commentArticle.css';
+import { ArrowLeft, MessageSquare, Send, User, Trash2, Heart, Sparkles, Loader2 } from 'lucide-react';
+import { API_BASE, getStoredUser } from '../config/api';
 
-const API_BASE = "https://backend-app-web-dev-knowledge.vercel.app/api";
-
-function formatDate(dateStr) {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-function getInitial(name) {
-  if (!name) return "?";
-  return name.charAt(0).toUpperCase();
-}
-
-function getAvatarColor(name) {
-  const colors = [
-    "#4f7df9", "#e05c7a", "#34b89a", "#f5a623",
-    "#9b59b6", "#1abc9c", "#e74c3c", "#3498db",
-  ];
-  if (!name) return colors[0];
-  const idx = name.charCodeAt(0) % colors.length;
-  return colors[idx];
-}
-
-export default function CommentArticle() {
-  const navigate = useNavigate();
+function CommentArticle() {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const article = location.state?.article || null;
-  const articleId = location.state?.articleId || article?._id || "";
-  const articleTitle = location.state?.articleTitle || article?.title || "Article";
+  const { articleId, articleTitle } = location.state || {};
+  const { token, userId, userName } = getStoredUser();
 
   const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [commentText, setCommentText] = useState("");
-  const [error, setError] = useState("");
-  const [submitError, setSubmitError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-
-  // NOUVEAU : ID du commentaire en cours de modification (null = mode "ajout")
-  const [editingCommentId, setEditingCommentId] = useState(null);
-
-  const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
-  const userName = location.state?.userName || localStorage.getItem("userName") || "Anonymous";
-
-  const fetchComments = async () => {
-    if (!articleId) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch(`${API_BASE}/comment/get/${articleId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error("Failed to fetch comments");
-      const data = await res.json();
-      setComments(Array.isArray(data) ? data : data.comments || []);
-    } catch (err) {
-      setError("Could not load comments. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchComments();
-    // eslint-disable-next-line
-  }, [articleId]);
-
-  // ── SOUMETTRE (ajout OU modification selon editingCommentId) ──
-  const handleSubmit = async () => {
-    if (!commentText.trim()) return;
     if (!articleId) {
-      setSubmitError("Article ID is missing. Please go back and try again.");
-      return;
-    }
-    if (!userId) {
-      setSubmitError("You must be logged in to post a comment.");
+      navigate('/blog');
       return;
     }
 
-    setSubmitError("");
-    setSuccessMsg("");
-    setSubmitting(true);
-
-    try {
-      if (editingCommentId) {
-        // ── MODE MODIFICATION : PUT /api/comment/update/:id ──
-        const res = await fetch(`${API_BASE}/comment/update/${editingCommentId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ commentContain: commentText.trim() }),
-        });
-        if (!res.ok) throw new Error("Failed to update comment");
-        setSuccessMsg("Comment updated successfully!");
-        setEditingCommentId(null); // Repasse en mode "ajout"
-      } else {
-        // ── MODE AJOUT : POST /api/comment/add ──
-        const res = await fetch(`${API_BASE}/comment/add`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ userId, articleId, commentContain: commentText.trim() }),
-        });
-        if (!res.ok) throw new Error("Failed to post comment");
-        setSuccessMsg("Comment posted successfully!");
+    const fetchComments = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/comment/all/${articleId}`);
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setComments(data);
+        }
+      } catch (err) {
+        console.error('Error loading comments:', err);
+      } finally {
+        setLoading(false);
       }
+    };
 
-      setCommentText("");
-      await fetchComments();
-      setTimeout(() => setSuccessMsg(""), 3000);
+    fetchComments();
+  }, [articleId, navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+
+    if (!token || !userId) {
+      alert('Please log in to post a comment.');
+      navigate('/login');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`${API_BASE}/api/comment/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          articleId,
+          userId,
+          userName: userName || 'Developer',
+          content: newComment,
+        }),
+      });
+
+      if (res.ok) {
+        const savedComment = await res.json();
+        setComments([...comments, savedComment.comment || savedComment]);
+        setNewComment('');
+      }
     } catch (err) {
-      setSubmitError(
-        editingCommentId
-          ? "Failed to update comment. Please try again."
-          : "Failed to post comment. Please try again."
-      );
+      console.error('Error posting comment:', err);
     } finally {
       setSubmitting(false);
     }
   };
 
-  // ── CLIC SUR "MODIFIER" : charge le texte dans le textarea ──
-  const handleEditClick = (comment) => {
-    const text = comment.commentContain || comment.content || comment.text || "";
-    setCommentText(text);           // Charge le texte existant dans le textarea
-    setEditingCommentId(comment._id); // Passe en mode "modification"
-    setSubmitError("");
-    setSuccessMsg("");
-    // Scroll vers le formulaire pour que l'utilisateur le voit
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  // ── CLIC SUR "ANNULER" : annule la modification en cours ──
-  const handleCancelEdit = () => {
-    setEditingCommentId(null);
-    setCommentText("");
-    setSubmitError("");
-  };
-
-  // ── CLIC SUR "SUPPRIMER" : confirmation puis fetch DELETE ──
-  const handleDeleteClick = async (commentId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this comment? This action cannot be undone."
-    );
-    
-    if (!confirmed) return;
-
+  const handleDelete = async (commentId) => {
+    if (!window.confirm('Delete this comment?')) return;
     try {
-      const res = await fetch(`${API_BASE}/comment/delete/${commentId}`, {
-        method: "DELETE",
+      const res = await fetch(`${API_BASE}/api/comment/delete/${commentId}`, {
+        method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      if (!res.ok) throw new Error("Failed to delete comment");
-      setSuccessMsg("Comment deleted successfully!");
-      await fetchComments();
-      setTimeout(() => setSuccessMsg(""), 3000);
+      if (res.ok) {
+        setComments(comments.filter((c) => c._id !== commentId));
+      }
     } catch (err) {
-      setSubmitError("Failed to delete comment. Please try again.");
+      console.error('Error deleting comment:', err);
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && e.ctrlKey) handleSubmit();
-  };
-
-  // ── VÉRIFIE si le commentaire appartient à l'utilisateur connecté ──
-  // On compare l'ID stocké dans le commentaire avec celui du localStorage
-  const isOwner = (comment) => {
-    const commentOwnerId =
-      comment.userId?._id?.toString() ||   // après populate → objet { _id, name }
-      comment.userId?.toString() ||         // avant populate → string directe
-      "";
-    return commentOwnerId === userId;
-  };
-
   return (
-    <div className="ca-root">
-      <div className="ca-bg-blob ca-bg-blob--1" />
-      <div className="ca-bg-blob ca-bg-blob--2" />
+    <div className="comments-page-root">
+      <Header />
+      
+      <main className="comments-main">
+        <div className="ambient-glow-center" style={{ top: '15%' }} />
 
-      <div className="ca-container">
-        {/* Header */}
-        <header className="ca-header">
-          <button className="ca-back-btn" onClick={() => navigate(-1)}>
+        <div className="container comments-container">
+          
+          <Link to={`/article/${articleId}`} className="comments-back-btn">
             <ArrowLeft size={16} />
-            <span>Back</span>
-          </button>
-          <div className="ca-header-content">
-            <div className="ca-header-label">Discussion</div>
-            <h1 className="ca-article-title">{articleTitle}</h1>
-            <div className="ca-comment-count">
-              {!loading && (
-                <span>
-                  {comments.length} {comments.length === 1 ? "comment" : "comments"}
-                </span>
-              )}
+            <span>Back to Article</span>
+          </Link>
+
+          {/* Header Card */}
+          <div className="framer-card comments-header-card">
+            <div className="section-badge">
+              <span className="section-badge-dot" />
+              <span>Peer Discussions</span>
             </div>
+            <h1 className="comments-headline">Discussion & Code Feedback</h1>
+            <p className="comments-article-ref">
+              On article: <strong>{articleTitle || 'Technical Article'}</strong>
+            </p>
           </div>
-        </header>
 
-        <div className="ca-layout">
-          {/* ── FORMULAIRE (Ajout OU Modification) ── */}
-          <section className="ca-compose-section">
-            <div className={`ca-compose-card ${editingCommentId ? "ca-compose-card--editing" : ""}`}>
-              <div className="ca-compose-header">
-                <div
-                  className="ca-compose-avatar"
-                  style={{ background: getAvatarColor(userName) }}
-                >
-                  {getInitial(userName)}
-                </div>
-                <span className="ca-compose-label">
-                  <strong>{userName}</strong> —{" "}
-                  {editingCommentId ? "Edit your comment" : "Leave a comment"}
-                </span>
+          {/* New Comment Input */}
+          <div className="framer-card comments-input-card">
+            <form onSubmit={handleSubmit}>
+              <div className="comments-author-tag">
+                <User size={14} />
+                <span>Commenting as <strong>{userName || 'Guest (Please log in)'}</strong></span>
               </div>
-
+              
               <textarea
-                className="ca-textarea"
-                placeholder="Share your thoughts… (Ctrl+Enter to submit)"
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                onKeyDown={handleKeyDown}
+                className="comments-textarea"
                 rows={4}
-                disabled={submitting}
+                required
+                placeholder="Share your thoughts, suggestions, code alternatives, or questions with the author..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
               />
 
-              <div className="ca-compose-footer">
-                {submitError && (
-                  <span className="ca-msg ca-msg--error">{submitError}</span>
-                )}
-                {successMsg && (
-                  <span className="ca-msg ca-msg--success">{successMsg}</span>
-                )}
-                <div className="ca-compose-actions">
-                  <span className="ca-char-hint">
-                    {commentText.length > 0 ? `${commentText.length} chars` : ""}
-                  </span>
-
-                  {/* Bouton Annuler — visible uniquement en mode modification */}
-                  {editingCommentId && (
-                    <button className="ca-cancel-btn" onClick={handleCancelEdit}>
-                      <X size={15} />
-                      <span>Cancel</span>
-                    </button>
+              <div className="comments-form-foot">
+                <button
+                  type="submit"
+                  className="btn-gradient-v1 comments-submit-btn"
+                  disabled={submitting || !newComment.trim()}
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 size={15} className="auth-spinner" />
+                      <span>Posting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send size={15} />
+                      <span>Post Comment</span>
+                    </>
                   )}
-
-                  {/* Bouton principal : "Post Comment" OU "Update Comment" */}
-                  <button
-                    className={`ca-submit-btn ${submitting ? "ca-submit-btn--loading" : ""} ${editingCommentId ? "ca-submit-btn--update" : ""}`}
-                    onClick={handleSubmit}
-                    disabled={submitting || !commentText.trim()}
-                  >
-                    {submitting ? (
-                      <>
-                        <span className="ca-spinner" />
-                        {editingCommentId ? "Updating…" : "Posting…"}
-                      </>
-                    ) : editingCommentId ? (
-                      <>
-                        <Pencil size={15} />
-                        <span>Update Comment</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send size={15} />
-                        <span>Post Comment</span>
-                      </>
-                    )}
-                  </button>
-                </div>
+                </button>
               </div>
+            </form>
+          </div>
+
+          {/* Comments List */}
+          <div className="comments-list-wrap">
+            <div className="comments-count-title">
+              <MessageSquare size={18} color="#c084fc" />
+              <span>Community Feedback ({comments.length})</span>
             </div>
-          </section>
 
-          {/* ── LISTE DES COMMENTAIRES ── */}
-          <section className="ca-comments-section">
             {loading ? (
-              <div className="ca-loading">
-                <div className="ca-loading-dots">
-                  <span /><span /><span />
-                </div>
-                <p>Loading comments…</p>
+              <div className="comments-loading">
+                {[1, 2].map((n) => (
+                  <div key={n} className="framer-card comments-skeleton" />
+                ))}
               </div>
-            ) : error ? (
-              <div className="ca-empty-state ca-empty-state--error">
-                <div className="ca-empty-icon"><AlertTriangle size={32} strokeWidth={1.5} /></div>
-                <p>{error}</p>
-                <button className="ca-retry-btn" onClick={fetchComments}>Retry</button>
-              </div>
-            ) : comments.length === 0 ? (
-              <div className="ca-empty-state">
-                <div className="ca-empty-icon"><MessageSquare size={32} strokeWidth={1.5} /></div>
-                <p className="ca-empty-title">No comments yet</p>
-                <p className="ca-empty-sub">Be the first to share your thoughts!</p>
+            ) : comments.length > 0 ? (
+              <div className="comments-list">
+                {comments.map((comment) => (
+                  <div key={comment._id} className="framer-card comment-card">
+                    <div className="comment-card-top">
+                      <div className="comment-user-box">
+                        <div className="comment-avatar">
+                          {comment.userName ? comment.userName.charAt(0).toUpperCase() : 'U'}
+                        </div>
+                        <div>
+                          <div className="comment-user-name">{comment.userName || 'Engineer'}</div>
+                          <div className="comment-date">
+                            {comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : 'Recent'}
+                          </div>
+                        </div>
+                      </div>
+
+                      {comment.userId === userId && (
+                        <button
+                          onClick={() => handleDelete(comment._id)}
+                          className="comment-delete-btn"
+                          title="Delete your comment"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="comment-content-text">
+                      {comment.content}
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
-              <ul className="ca-comment-list">
-                {comments.map((comment, idx) => {
-                  const name =
-                    comment.userId?.name ||
-                    comment.user?.name ||
-                    comment.userId?.username ||
-                    comment.username ||
-                    "Anonymous";
-                  const text =
-                    comment.commentContain ||
-                    comment.content ||
-                    comment.text ||
-                    "";
-                  const date =
-                    comment.createdAt ||
-                    comment.date ||
-                    comment.timestamp ||
-                    null;
-
-                  // Ce commentaire est-il en cours de modification ?
-                  const isBeingEdited = editingCommentId === comment._id;
-
-                  return (
-                    <li
-                      className={`ca-comment-card ${isBeingEdited ? "ca-comment-card--active" : ""}`}
-                      key={comment._id || idx}
-                      style={{ animationDelay: `${idx * 0.06}s` }}
-                    >
-                      <div className="ca-comment-avatar-wrap">
-                        <div
-                          className="ca-comment-avatar"
-                          style={{ background: getAvatarColor(name) }}
-                        >
-                          {getInitial(name)}
-                        </div>
-                        {idx < comments.length - 1 && (
-                          <div className="ca-thread-line" />
-                        )}
-                      </div>
-
-                      <div className="ca-comment-body">
-                        <div className="ca-comment-meta">
-                          <span className="ca-comment-name">{name}</span>
-                          {date && (
-                            <span className="ca-comment-date">{formatDate(date)}</span>
-                          )}
-                        </div>
-                        <p className="ca-comment-text">{text}</p>
-
-                        {/* ── BOUTONS MODIFIER / SUPPRIMER ──
-                            Affichés UNIQUEMENT si le commentaire appartient
-                            à l'utilisateur connecté (isOwner) */}
-                        {isOwner(comment) && (
-                          <div className="ca-comment-actions">
-                            <button
-                              className="ca-action-btn ca-action-btn--edit"
-                              onClick={() => handleEditClick(comment)}
-                              title="Edit comment"
-                            >
-                              <Pencil size={14} />
-                              <span>Edit</span>
-                            </button>
-                            <button
-                              className="ca-action-btn ca-action-btn--delete"
-                              onClick={() => handleDeleteClick(comment._id)}
-                              title="Delete comment"
-                            >
-                              <Trash2 size={14} />
-                              <span>Delete</span>
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
+              <div className="framer-card comments-empty">
+                <MessageSquare size={36} color="#a855f7" />
+                <h3>No comments yet</h3>
+                <p>Be the first to share feedback or ask a technical question on this article.</p>
+              </div>
             )}
-          </section>
+          </div>
+
         </div>
-      </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }
+
+export default CommentArticle;

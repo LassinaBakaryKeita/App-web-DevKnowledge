@@ -1,0 +1,121 @@
+/* Custom 404 Page Styles — Framer 404 Aesthetic */
+
+.notfound-page-root {
+  background-color: var(--bg-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.notfound-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 160px 20px 100px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.notfound-glow-blob {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.16) 0%, rgba(59, 130, 246, 0.06) 50%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.notfound-container {
+  max-width: 680px !important;
+  position: relative;
+  z-index: 1;
+}
+
+.notfound-card {
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: rgba(14, 14, 14, 0.85);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+}
+
+.notfound-badge-wrap {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.notfound-code-badge {
+  font-family: var(--font-mono);
+  font-size: clamp(64px, 12vw, 100px);
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(168, 85, 247, 0.4) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+}
+
+.notfound-icon-circle {
+  position: absolute;
+  bottom: -6px;
+  right: -10px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #141414;
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.notfound-title {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.notfound-desc {
+  font-size: 15.5px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 480px;
+  margin-bottom: 34px;
+}
+
+.notfound-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.notfound-home-btn {
+  padding: 13px 30px;
+}
+
+.notfound-terminal-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+}

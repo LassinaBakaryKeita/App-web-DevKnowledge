@@ -1,19 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Header.css';
-import { Link, useNavigate } from 'react-router-dom';
-import { Zap, PenSquare, LogOut, ArrowRight, User } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Zap, PenSquare, LogOut, ArrowRight, User, Menu, X, BookOpen } from 'lucide-react';
+import { clearStoredUser } from '../config/api';
 
-function Navbar() {
+function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  
+  const [authState, setAuthState] = useState({
+    token: localStorage.getItem('token'),
+    userName: localStorage.getItem('userName'),
+  });
 
-  const token = localStorage.getItem('token');
-  const userName = localStorage.getItem('userName');
+  useEffect(() => {
+    const handleAuthChange = () => {
+      setAuthState({
+        token: localStorage.getItem('token'),
+        userName: localStorage.getItem('userName'),
+      });
+    };
+
+    window.addEventListener('auth-change', handleAuthChange);
+    window.addEventListener('storage', handleAuthChange);
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('auth-change', handleAuthChange);
+      window.removeEventListener('storage', handleAuthChange);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userId');
+    clearStoredUser();
+    setAuthState({ token: null, userName: null });
     setMenuOpen(false);
     navigate('/');
   };
@@ -21,110 +48,136 @@ function Navbar() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <nav className="navbar">
-      <div className="navbar-inner">
-
+    <header className={`navbar-header ${scrolled ? 'navbar-header--scrolled' : ''}`}>
+      <div className="navbar-container">
+        
         {/* Logo */}
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
           <div className="navbar-logo-icon">
             <Zap size={18} strokeWidth={2.5} />
           </div>
-          <span className="navbar-logo-text">Dev<span>Knowledge</span></span>
+          <span className="navbar-logo-text">Dev<span className="logo-gradient">Knowledge</span></span>
         </Link>
 
-        {/* Liens desktop */}
-        <div className="navbar-links">
-          <Link to="/" className="navbar-link" onClick={closeMenu}>Home</Link>
-          <Link to="/blog" className="navbar-link" onClick={closeMenu}>Blog</Link>
-          {token && (
-            <Link to="/myArticles" className="navbar-link" onClick={closeMenu}>
-              My Articles
+        {/* Center Nav Links */}
+        <nav className="navbar-links">
+          <Link 
+            to="/" 
+            className={`navbar-link ${location.pathname === '/' ? 'navbar-link--active' : ''}`} 
+            onClick={closeMenu}
+          >
+            Home
+          </Link>
+          <Link 
+            to="/blog" 
+            className={`navbar-link ${location.pathname.startsWith('/blog') ? 'navbar-link--active' : ''}`} 
+            onClick={closeMenu}
+          >
+            Articles
+          </Link>
+          {authState.token && (
+            <Link 
+              to="/myArticles" 
+              className={`navbar-link ${location.pathname === '/myArticles' ? 'navbar-link--active' : ''}`} 
+              onClick={closeMenu}
+            >
+              My Contributions
             </Link>
           )}
-        </div>
+        </nav>
 
-        {/* Actions desktop */}
+        {/* Desktop Actions */}
         <div className="navbar-actions">
-          {token ? (
-            <>
-              <span className="navbar-user-name">
-                Welcome, <strong>{userName}</strong>
-              </span>
-              <Link to="/createArticle" className="navbar-btn-cta" onClick={closeMenu}>
-                <PenSquare size={16} />
-                <span>Write Article</span>
+          {authState.token ? (
+            <div className="navbar-user-actions">
+              <div className="navbar-user-badge">
+                <User size={14} />
+                <span>{authState.userName || 'Author'}</span>
+              </div>
+              <Link to="/createArticle" className="btn-navbar-write" onClick={closeMenu}>
+                <PenSquare size={15} />
+                <span>Write</span>
               </Link>
-              <button onClick={handleLogout} className="navbar-btn-login">
+              <button onClick={handleLogout} className="btn-navbar-logout" title="Log out">
                 <LogOut size={15} />
-                <span>Log out</span>
               </button>
-            </>
+            </div>
           ) : (
-            <>
-              <Link to="/login" className="navbar-btn-login" onClick={closeMenu}>Log in</Link>
-              <Link to="/login" className="navbar-btn-cta" onClick={closeMenu}>
-                <span>Get Started</span>
-                <ArrowRight size={16} />
+            <div className="navbar-guest-actions">
+              <Link to="/login" className="navbar-link-login" onClick={closeMenu}>
+                Log in
               </Link>
-            </>
+              <Link to="/login?mode=register" className="btn-gradient-v1 navbar-btn-cta" onClick={closeMenu}>
+                <span>Get Started</span>
+                <ArrowRight size={15} />
+              </Link>
+            </div>
           )}
         </div>
 
-        {/* Bouton hamburger — mobile uniquement */}
+        {/* Mobile Hamburger Toggle */}
         <button
-          className={`navbar-hamburger ${menuOpen ? 'navbar-hamburger--open' : ''}`}
-          aria-label="Toggle menu"
-          onClick={() => setMenuOpen((prev) => !prev)}
+          className="navbar-hamburger"
+          aria-label="Toggle navigation menu"
+          onClick={() => setMenuOpen(!menuOpen)}
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
 
       </div>
 
-      {/* Menu déroulant mobile */}
-      <div className={`navbar-mobile-menu ${menuOpen ? 'navbar-mobile-menu--open' : ''}`}>
+      {/* Mobile Drawer Menu */}
+      {menuOpen && (
+        <div className="navbar-mobile-drawer">
+          {authState.token && (
+            <div className="navbar-mobile-user">
+              <div className="navbar-mobile-user-avatar">
+                <User size={16} />
+              </div>
+              <div>
+                <div className="navbar-mobile-user-name">{authState.userName}</div>
+                <div className="navbar-mobile-user-role">Contributor</div>
+              </div>
+            </div>
+          )}
 
-        {/* Nom de l'utilisateur si connecté */}
-        {token && (
-          <div className="navbar-mobile-user">
-            <User size={16} />
-            <span>Welcome, <strong>{userName}</strong></span>
-          </div>
-        )}
+          <Link to="/" className="navbar-mobile-link" onClick={closeMenu}>
+            Home
+          </Link>
+          <Link to="/blog" className="navbar-mobile-link" onClick={closeMenu}>
+            <BookOpen size={16} />
+            <span>Articles</span>
+          </Link>
 
-        <Link to="/" className="navbar-mobile-link" onClick={closeMenu}>Home</Link>
-        <Link to="/blog" className="navbar-mobile-link" onClick={closeMenu}>Blog</Link>
-
-        {token && (
-          <>
-            <Link to="/myArticles" className="navbar-mobile-link" onClick={closeMenu}>
-              My Articles
-            </Link>
-            <Link to="/createArticle" className="navbar-mobile-link navbar-mobile-link--cta" onClick={closeMenu}>
-              <PenSquare size={16} />
-              <span>Write an Article</span>
-            </Link>
-            <button className="navbar-mobile-link navbar-mobile-link--logout" onClick={handleLogout}>
-              <LogOut size={16} />
-              <span>Log out</span>
-            </button>
-          </>
-        )}
-
-        {!token && (
-          <>
-            <Link to="/login" className="navbar-mobile-link" onClick={closeMenu}>Log in</Link>
-            <Link to="/login" className="navbar-mobile-link navbar-mobile-link--cta" onClick={closeMenu}>
-              <span>Get Started</span>
-              <ArrowRight size={16} />
-            </Link>
-          </>
-        )}
-      </div>
-    </nav>
+          {authState.token ? (
+            <>
+              <Link to="/myArticles" className="navbar-mobile-link" onClick={closeMenu}>
+                My Contributions
+              </Link>
+              <Link to="/createArticle" className="btn-gradient-v1 navbar-mobile-cta" onClick={closeMenu}>
+                <PenSquare size={16} />
+                <span>Write an Article</span>
+              </Link>
+              <button className="navbar-mobile-logout" onClick={handleLogout}>
+                <LogOut size={16} />
+                <span>Log out</span>
+              </button>
+            </>
+          ) : (
+            <div className="navbar-mobile-guest-buttons">
+              <Link to="/login" className="btn-gradient-v2" onClick={closeMenu}>
+                Log in
+              </Link>
+              <Link to="/login?mode=register" className="btn-gradient-v1" onClick={closeMenu}>
+                <span>Join Community</span>
+                <ArrowRight size={15} />
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
+    </header>
   );
 }
 
-export default Navbar;
+export default Header;

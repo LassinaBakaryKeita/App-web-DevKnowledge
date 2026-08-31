@@ -1,163 +1,93 @@
-/* ============================================
-   Features Section
-   ============================================ */
+/* Features Section Styles — Framer Feature Card Grid */
 
-.features {
-  padding: 96px 0;
-  background: var(--bg-base);
+.features-section {
+  background-color: var(--bg-surface);
 }
 
-.features-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 24px;
+.features-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .features-header {
   text-align: center;
-  margin-bottom: 64px;
-}
-
-.features-label {
-  display: inline-flex;
+  max-width: 780px;
+  margin-bottom: 60px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--primary);
-  background: var(--primary-light);
-  padding: 5px 12px;
-  border-radius: var(--radius-full);
-  margin-bottom: 16px;
 }
 
 .features-title {
-  font-size: clamp(28px, 4vw, 42px);
-  font-weight: 800;
-  color: var(--text-primary);
-  letter-spacing: -0.03em;
-  margin-bottom: 14px;
+  font-size: clamp(26px, 3.8vw, 42px);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
 }
 
 .features-subtitle {
-  font-size: 17px;
+  font-size: 16px;
   color: var(--text-secondary);
-  max-width: 520px;
-  margin: 0 auto;
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
-/* --- Cards Grid --- */
 .features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 24px;
+  width: 100%;
 }
 
 .feature-card {
-  background: var(--bg-white);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: 32px 28px;
-  transition: var(--transition);
-  position: relative;
-  overflow: hidden;
+  padding: 34px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 }
 
-.feature-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  opacity: 0;
-  transition: var(--transition);
-}
-
-.feature-card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-6px);
-  border-color: rgba(79, 110, 247, 0.2);
-}
-
-.feature-card:hover::before {
-  opacity: 1;
-}
-
-.feature-icon-wrap {
+.feature-icon-box {
   width: 50px;
   height: 50px;
   border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
-  transition: var(--transition);
-  flex-shrink: 0;
+  margin-bottom: 22px;
+  transition: var(--transition-fast);
 }
 
-.feature-card:hover .feature-icon-wrap {
-  transform: scale(1.08);
-}
-
-/* Icon color variants */
-.feature-icon-blue {
-  background: #eef2ff;
-  color: #4f46e5;
-}
-
-.feature-icon-purple {
-  background: #f3e8ff;
-  color: #7c3aed;
-}
-
-.feature-icon-green {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
-.feature-icon-orange {
-  background: #fff7ed;
-  color: #ea580c;
-}
-
-.feature-icon-pink {
-  background: #fdf2f8;
-  color: #db2777;
-}
-
-.feature-icon-teal {
-  background: #ecfeff;
-  color: #0891b2;
+.feature-card:hover .feature-icon-box {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(168, 85, 247, 0.4);
+  transform: scale(1.05);
 }
 
 .feature-name {
-  font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 10px;
-  letter-spacing: -0.01em;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 12px;
 }
 
 .feature-desc {
   font-size: 14px;
   color: var(--text-secondary);
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .features-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 700px) {
   .features-grid {
     grid-template-columns: 1fr;
   }

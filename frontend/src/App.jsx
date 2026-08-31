@@ -6,6 +6,7 @@ import CreateArticle from './pages/CreateArticle.jsx';
 import MyArticles from './pages/MyArticles.jsx';
 import DetailedInformationArticle from './pages/detailedInformationArticle.jsx';
 import CommentArticle from './pages/commentArticle.jsx';
+import NotFound from './pages/NotFound.jsx';
 
 function App() {
   return (
@@ -16,9 +17,9 @@ function App() {
       <Route path="/createArticle" element={<CreateArticle />} />
       <Route path="/myArticles" element={<MyArticles />} />
       <Route path="/article/:id" element={<DetailedInformationArticle />} />
-      <Route path="/CommentArticle" element={<CommentArticle/>} />
-
-
+      <Route path="/CommentArticle" element={<CommentArticle />} />
+      {/* Dedicated Custom 404 Route */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

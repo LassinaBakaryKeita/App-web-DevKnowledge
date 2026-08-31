@@ -1,85 +1,99 @@
 import './Footer.css';
-import { Link } from "react-router-dom";
-import { FaTiktok, FaFacebook, FaGithub, FaLinkedinIn } from "react-icons/fa";
-import { Zap } from "lucide-react";
+import { Link } from 'react-router-dom';
+import { Zap, MessageSquare, ArrowUpRight, BookOpen, PenSquare } from 'lucide-react';
+import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="footer">
-      <div className="footer-inner">
+    <footer className="footer-root">
+      <div className="section-divider-line section-divider-top" />
 
-        {/* Brand column */}
-        <div className="footer-brand">
-          <Link to="/" className="footer-logo">
-            <div className="footer-logo-icon">
-              <Zap size={18} strokeWidth={2.5} />
-            </div>
-            <span className="footer-logo-text">Dev<span>Knowledge</span></span>
-          </Link>
-
-          <p className="footer-desc">
-            The platform where software engineers share real expertise practical, in-depth, and peer-reviewed by the community.
-          </p>
-
-          <div className="footer-socials">
-            <a href="https://www.tiktok.com/@lassina.bakary.ke" className="footer-social-link" aria-label="TikTok" target='_blank'  rel="noopener noreferrer">  <FaTiktok /></a>
-            <a href="https://github.com/LassinaBakaryKeita" className="footer-social-link" aria-label="GitHub" target='_blank'  rel="noopener noreferrer"> <FaGithub /> </a>
-            <a href="https://www.facebook.com/lassina.bakary.keita" className="footer-social-link" aria-label="Facebook" target='_blank'  rel="noopener noreferrer"><FaFacebook/> </a>
-            <a href="https://www.linkedin.com/in/lassina-bakary-ke%C3%AFta-b28626370/" className="footer-social-link" aria-label="LinkedIn" target='_blank'  rel="noopener noreferrer"> <FaLinkedinIn />  </a>
-          </div>
+      <div className="container footer-container">
+        
+        {/* Top multi-column */}
+        <div className="footer-top-grid">
+          
+          {/* Brand Col */}
+          <div className="footer-brand-col">
+            <Link to="/" className="footer-logo">
+              <div className="footer-logo-icon">
+                <Zap size={18} strokeWidth={2.5} />
+              </div>
+              <span className="footer-logo-text">Dev<span className="logo-gradient">Knowledge</span></span>
+            </Link>
             
+            <p className="footer-mission-text">
+              The community-driven platform where software engineers share real architectural lessons, code discoveries, and technical breakdowns.
+            </p>
+
+            <div className="footer-social-row">
+              <a
+                href="https://github.com/LassinaBakaryKeita"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-btn"
+                aria-label="GitHub"
+              >
+                <FaGithub size={16} />
+              </a>
+              <a
+                href="https://www.linkedin.com/in/lassina-bakary-ke%C3%AFta-b28626370/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-btn"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedinIn size={16} />
+              </a>
+            </div>
+          </div>
+
+          {/* Nav Column 1 */}
+          <div className="footer-nav-col">
+            <h4 className="footer-col-heading">Platform</h4>
+            <ul className="footer-links-list">
+              <li><Link to="/">Home Overview</Link></li>
+              <li><Link to="/blog">All Technical Articles</Link></li>
+              <li><Link to="/createArticle">Contribute Knowledge</Link></li>
+              <li><Link to="/myArticles">Author Dashboard</Link></li>
+            </ul>
+          </div>
+
+          {/* Nav Column 2 */}
+          <div className="footer-nav-col">
+            <h4 className="footer-col-heading">Topics</h4>
+            <ul className="footer-links-list">
+              <li><Link to="/blog">Distributed Systems</Link></li>
+              <li><Link to="/blog">TypeScript & React</Link></li>
+              <li><Link to="/blog">Backend Architecture</Link></li>
+              <li><Link to="/blog">DevOps & Cloud</Link></li>
+            </ul>
+          </div>
+
+          {/* Nav Column 3 */}
+          <div className="footer-nav-col">
+            <h4 className="footer-col-heading">Account</h4>
+            <ul className="footer-links-list">
+              <li><Link to="/login">Sign In</Link></li>
+              <li><Link to="/login?mode=register">Join Community</Link></li>
+              <li><Link to="/createArticle">Draft an Article</Link></li>
+            </ul>
+          </div>
+
         </div>
 
-        {/* Platform links */}
-        <div className="footer-col">
-          <div className="footer-col-title">Platform</div>
-          <div className="footer-links">
-            <Link to="/" className="footer-link">Home</Link>
-            <Link to="/Blog" className="footer-link">Blog</Link>
-
-            <a href="#" className="footer-link">Browse Articles</a>
-             <a href="#" className="footer-link">Trending</a>
-            <a href="#" className="footer-link">Topics</a>
-           
+        {/* Bottom Bar */}
+        <div className="footer-bottom-bar">
+          <div className="footer-copy-text">
+            &copy; {currentYear} DevKnowledge. Designed for the global software engineering community.
+          </div>
+          <div className="footer-legal-links">
+            <span className="footer-legal-tag">100% Open & Community Focused</span>
           </div>
         </div>
 
-        {/* Account links */}
-        <div className="footer-col">
-          <div className="footer-col-title">Account</div>
-          <div className="footer-links">
-            <Link to="/login" className="footer-link">Log in</Link>
-            <Link  to="/login?mode=register" className="footer-link">Sign up</Link>
-            <a href="#" className="footer-link">Dashboard</a>
-            <a href="#" className="footer-link">Write an Article</a>
-          </div>
-        </div>
-
-        {/* Company links */}
-        <div className="footer-col">
-          <div className="footer-col-title">Company</div>
-          <div className="footer-links">
-            <a href="#" className="footer-link">About Us</a>
-            <a href="#" className="footer-link">Privacy Policy</a>
-            <a href="#" className="footer-link">Terms of Use</a>
-            <a href="#" className="footer-link">Contact</a>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Bottom bar */}
-      <div className="footer-bottom">
-        <span className="footer-copyright">
-          © {currentYear} DevKnowledge. All rights reserved.
-        </span>
-        <div className="footer-bottom-links">
-          <a href="#" className="footer-bottom-link">Privacy</a>
-          <a href="#" className="footer-bottom-link">Terms</a>
-          <a href="#" className="footer-bottom-link">Cookies</a>
-        </div>
       </div>
     </footer>
   );

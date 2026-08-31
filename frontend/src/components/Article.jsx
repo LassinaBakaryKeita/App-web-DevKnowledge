@@ -1,9 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import './Article.css';
-import { Heart, MessageSquare, ArrowRight, FileText } from 'lucide-react';
-
-const API_BASE = 'https://backend-app-web-dev-knowledge.vercel.app';
+import { Heart, MessageSquare, ArrowRight, FileCode2, Clock, Calendar } from 'lucide-react';
+import { API_BASE, getStoredUser } from '../config/api';
 
 function Article({ article }) {
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ function Article({ article }) {
     shortDescription = '',
     author = 'Anonymous',
     createdAt = '',
-    tag = 'General',
+    tag = 'Architecture',
     image = '',
     likes = 0,
     comments = 0,
@@ -24,10 +23,8 @@ function Article({ article }) {
   const [isLiked, setIsLiked] = useState(false);
   const [commentsCount, setCommentsCount] = useState(comments || 0);
 
-  const authorInitial = author ? author.charAt(0).toUpperCase() : '?';
+  const authorInitial = author ? author.charAt(0).toUpperCase() : 'A';
 
-  // Si l'URL de l'image commence par "http" c'est une URL Cloudinary complète
-  // Sinon c'est un ancien chemin local qu'on préfixe avec l'URL du backend
   const imageUrl = image
     ? image.startsWith('http')
       ? image
@@ -36,18 +33,19 @@ function Article({ article }) {
 
   useEffect(() => {
     const checkLikeStatus = async () => {
-      const userId = localStorage.getItem('userId');
-      const token = localStorage.getItem('token');
-      if (!userId || !token) return;
+      const { userId, token } = getStoredUser();
+      if (!userId || !token || !_id) return;
       try {
         const res = await fetch(
           `${API_BASE}/api/like/check?userId=${userId}&articleId=${_id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        const data = await res.json();
-        setIsLiked(data.isLiked);
+        if (res.ok) {
+          const data = await res.json();
+          setIsLiked(data.isLiked);
+        }
       } catch (err) {
-        console.error('Erreur vérification like :', err);
+        console.error('Like check error:', err);
       }
     };
     checkLikeStatus();
@@ -55,6 +53,7 @@ function Article({ article }) {
 
   useEffect(() => {
     const fetchCommentsCount = async () => {
+      if (!_id) return;
       try {
         const res = await fetch(`${API_BASE}/api/comment/count/${_id}`);
         if (res.ok) {
@@ -62,7 +61,7 @@ function Article({ article }) {
           setCommentsCount(data.count);
         }
       } catch (err) {
-        console.error('Erreur récupération nombre de commentaires :', err);
+        console.error('Comments count fetch error:', err);
       }
     };
     fetchCommentsCount();
@@ -71,10 +70,8 @@ function Article({ article }) {
   const handleLike = async (e) => {
     e.stopPropagation();
     e.preventDefault();
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
+    const { token, userId } = getStoredUser();
     if (!token || !userId) {
-      alert("Veuillez vous connecter d'abord !");
       navigate('/login');
       return;
     }
@@ -90,17 +87,15 @@ function Article({ article }) {
         setIsLiked(data.message === 'like');
       }
     } catch (err) {
-      console.error('Erreur toggle like :', err);
+      console.error('Error toggling like:', err);
     }
   };
 
   const handleCommentClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
+    const { token, userId, userName } = getStoredUser();
     if (!token || !userId) {
-      alert("Veuillez vous connecter d'abord !");
       navigate('/login');
       return;
     }
@@ -109,70 +104,96 @@ function Article({ article }) {
         articleId: _id,
         articleTitle: title,
         article,
-        userName: localStorage.getItem('userName'),
+        userName: userName || 'Developer',
       },
     });
   };
 
+  const formattedDate = createdAt
+    ? new Date(createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    : 'Recent';
+
   return (
-    <div className="article-card">
-      <div className="article-card-image-wrap">
+    <article className="framer-card article-card">
+      
+      {/* Image / Header Wrap */}
+      <div className="article-card-media">
         {imageUrl ? (
-          <img src={imageUrl} alt={title} />
+          <img src={imageUrl} alt={title} className="article-card-img" />
         ) : (
-          <div className="article-card-image-placeholder">
-            <FileText size={36} strokeWidth={1.5} />
+          <div className="article-card-code-placeholder">
+            <div className="placeholder-code-lines">
+              <span className="code-ph-line" />
+              <span className="code-ph-line short" />
+              <span className="code-ph-line medium" />
+            </div>
+            <FileCode2 size={32} color="#8b5cf6" />
           </div>
         )}
-        <span className="article-card-tag">{tag}</span>
+        <span className="article-card-tag-pill">{tag}</span>
       </div>
 
-      <div className="article-card-body">
-        <div className="article-card-author">
-          <div className="article-card-avatar">{authorInitial}</div>
-          <div className="article-card-author-info">
-            <div className="article-card-author-name">{author}</div>
-            <div className="article-card-date">
-              {createdAt ? new Date(createdAt).toLocaleDateString() : readTime}
+      {/* Body */}
+      <div className="article-card-content">
+        
+        {/* Author info */}
+        <div className="article-card-meta">
+          <div className="article-author-avatar">{authorInitial}</div>
+          <div className="article-author-details">
+            <span className="article-author-name">{author}</span>
+            <div className="article-date-row">
+              <Calendar size={12} />
+              <span>{formattedDate}</span>
             </div>
           </div>
         </div>
 
-        <div className="article-card-title">{title}</div>
+        {/* Title */}
+        <h3 className="article-card-title">
+          <Link to={`/article/${_id}`} state={{ article }}>
+            {title}
+          </Link>
+        </h3>
+
+        {/* Excerpt */}
         {shortDescription && (
-          <div className="article-card-excerpt">
-            {shortDescription.substring(0, 140)}...
-          </div>
+          <p className="article-card-desc">
+            {shortDescription.length > 130
+              ? `${shortDescription.substring(0, 130)}...`
+              : shortDescription}
+          </p>
         )}
 
-        <div className="article-card-footer">
-          <div className="article-card-stats">
+        {/* Footer actions */}
+        <div className="article-card-foot">
+          <div className="article-card-actions">
             <button
-              className={`article-card-stat ${isLiked ? 'article-card-stat--liked' : ''}`}
+              className={`article-action-btn ${isLiked ? 'article-action-btn--liked' : ''}`}
               onClick={handleLike}
-              title={isLiked ? "Unlike" : "Like"}
+              title={isLiked ? 'Liked' : 'Like'}
             >
-              <Heart size={16} fill={isLiked ? "currentColor" : "none"} />
+              <Heart size={15} fill={isLiked ? 'currentColor' : 'none'} />
               <span>{likesCount}</span>
             </button>
 
             <button
-              className="article-card-stat"
+              className="article-action-btn"
               onClick={handleCommentClick}
               title="Comments"
             >
-              <MessageSquare size={16} />
+              <MessageSquare size={15} />
               <span>{commentsCount}</span>
             </button>
           </div>
 
-          <Link to={`/article/${_id}`} state={{ article }} className="article-card-read-btn">
+          <Link to={`/article/${_id}`} state={{ article }} className="article-read-link">
             <span>Read</span>
-            <ArrowRight size={15} />
+            <ArrowRight size={14} />
           </Link>
         </div>
+
       </div>
-    </div>
+    </article>
   );
 }
 

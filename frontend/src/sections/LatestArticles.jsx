@@ -1,69 +1,49 @@
 import './LatestArticles.css';
 import Article from '../components/Article';
-import { Newspaper, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, BookOpen, Layers } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// Articles affichés en fallback si aucune donnée n'est encore disponible
-const SAMPLE_ARTICLES = [
-  {
-    id: 1,
-    title: 'Understanding React Server Components in 2024',
-    excerpt: 'RSCs blur the line between server and client. In this deep dive, I explain the mental model you need to use them effectively without foot-guns.',
-    author: 'Maya Chen',
-    date: 'Mar 18, 2025',
-    tag: 'React',
-    likes: 312,
-    comments: 54,
-  },
-  {
-    id: 2,
-    title: 'Why Your Docker Builds Are Slow (and How to Fix Them)',
-    excerpt: 'Layer caching misconfigurations are the silent killer of CI/CD pipelines. Here is how to cut build time by 60% with a few strategic changes.',
-    author: 'Carlos Mena',
-    date: 'Mar 14, 2025',
-    tag: 'DevOps',
-    likes: 228,
-    comments: 38,
-  },
-  {
-    id: 3,
-    title: 'The Hidden Cost of Over-Engineering Your API',
-    excerpt: 'Premature abstraction in API design creates technical debt faster than almost anything else. A pragmatic look at when to keep it simple.',
-    author: 'Jordan Park',
-    date: 'Mar 10, 2025',
-    tag: 'Architecture',
-    likes: 187,
-    comments: 29,
-  },
-];
-
-function LatestArticles({ articles }) {
-  const displayArticles = articles && articles.length > 0 ? articles : SAMPLE_ARTICLES;
-
+function LatestArticles({ articles = [] }) {
   return (
-    <section className="latest-articles">
-      <div className="latest-articles-inner">
-        <div className="latest-articles-header">
+    <section className="section-wrapper latest-articles-section">
+      <div className="ambient-glow-center" style={{ top: '20%' }} />
+
+      <div className="container latest-articles-container">
+        
+        {/* Section Header */}
+        <div className="latest-articles-top">
           <div className="latest-articles-heading">
-            <span className="latest-articles-label">
-              <Newspaper size={14} />
-              <span>Latest articles</span>
-            </span>
-            <h2 className="latest-articles-title">Community news</h2>
+            <div className="section-badge">
+              <span className="section-badge-dot" />
+              <span>Latest Community Insights</span>
+            </div>
+            <h2 className="latest-articles-title">Latest Articles & Guides</h2>
             <p className="latest-articles-desc">
-              Discover what developers are publishing right now.
+              Discover recently published techniques, architecture patterns, and engineering breakdowns.
             </p>
           </div>
-          <a href="/Blog" className="latest-articles-view-all">
-            <span>See all articles</span>
-            <ArrowRight size={16} />
-          </a>
+
+          <Link to="/blog" className="btn-gradient-v2 latest-articles-view-btn">
+            <span>View All Articles</span>
+            <ArrowRight size={15} />
+          </Link>
         </div>
 
-        <div className="articles-grid">
-          {displayArticles.map((article) => (
-            <Article key={article.id || article._id} article={article} />
-          ))}
+        {/* Dynamic Articles Grid */}
+        <div className="latest-articles-grid">
+          {articles && articles.length > 0 ? (
+            articles.map((article) => (
+              <Article key={article._id || article.id} article={article} />
+            ))
+          ) : (
+            <div className="latest-empty-state framer-card">
+              <BookOpen size={36} color="#a855f7" />
+              <h3>Loading articles...</h3>
+              <p>Fetching real developer publications from DevKnowledge community.</p>
+            </div>
+          )}
         </div>
+
       </div>
     </section>
   );

@@ -2,33 +2,41 @@ import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import HeroSection from '../sections/HeroSection';
 import About from '../sections/About';
-import CardFeature from '../sections/CardFeature';
+import HowItWork from '../sections/HowItWork';
 import Features from '../sections/Features';
 import LatestArticles from '../sections/LatestArticles';
+import ReadyToWorkSmarter from '../sections/ReadyToWorkSmarter';
 import Footer from '../components/Footer';
+import { API_BASE } from '../config/api';
 
 function Home() {
-    const [latestArticles, setLatestArticles] = useState([]);
+  const [latestArticles, setLatestArticles] = useState([]);
 
-    useEffect(() => {
-        fetch("https://backend-app-web-dev-knowledge.vercel.app/api/article/all")
-            .then(res => res.json())
-            .then(data => setLatestArticles(data.slice(0, 3))) // On ne prend que les 3 derniers
-            .catch(err => console.error(err));
-    }, []);
+  useEffect(() => {
+    fetch(`${API_BASE}/api/article/all`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setLatestArticles(data.slice(0, 3)); // 3 most recent articles
+        }
+      })
+      .catch((err) => console.error('Failed to fetch home articles:', err));
+  }, []);
 
-    return (
-        <>
-            <Header />
-            <HeroSection />
-            <About />
-            <Features />
-            <LatestArticles articles={latestArticles} />
-            <Footer />
-        </>
-    );
+  return (
+    <div className="home-page-root">
+      <Header />
+      <main>
+        <HeroSection />
+        <About />
+        <HowItWork />
+        <Features />
+        <LatestArticles articles={latestArticles} />
+        <ReadyToWorkSmarter />
+      </main>
+      <Footer />
+    </div>
+  );
 }
-
-
 
 export default Home;

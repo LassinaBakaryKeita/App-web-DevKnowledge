@@ -4,21 +4,29 @@ import Footer from '../components/Footer';
 import Article from '../components/Article';
 import './Blog.css';
 import { Link } from 'react-router-dom';
-import { Search, BookOpen, PlusCircle, X } from 'lucide-react';
+import { Search, BookOpen, PlusCircle, Filter, Sparkles, Code2, Layers } from 'lucide-react';
+import { API_BASE } from '../config/api';
 
 function Blog() {
   const [articles, setArticles] = useState([]);
+  const [filteredArticles, setFilteredArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showPopup, setShowPopup] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTag, setActiveTag] = useState('All');
+
+  const tags = ['All', 'Architecture', 'TypeScript', 'Backend', 'React', 'DevOps', 'Distributed Systems'];
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await fetch('https://backend-app-web-dev-knowledge.vercel.app/api/article/all');
+        const res = await fetch(`${API_BASE}/api/article/all`);
         const data = await res.json();
-        if (res.ok) setArticles(data);
+        if (Array.isArray(data)) {
+          setArticles(data);
+          setFilteredArticles(data);
+        }
       } catch (error) {
-        console.error('Erreur de chargement :', error);
+        console.error('Error loading articles:', error);
       } finally {
         setLoading(false);
       }
@@ -26,78 +34,123 @@ function Blog() {
     fetchArticles();
   }, []);
 
-  // Affiche un popup "Coming Soon" pendant 5 secondes à la place de naviguer
-  const handleSearchClick = (e) => {
-    e.preventDefault();
-    setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 5000);
-  };
+  useEffect(() => {
+    let result = articles;
+    if (activeTag !== 'All') {
+      result = result.filter(
+        (a) => (a.tag || '').toLowerCase() === activeTag.toLowerCase()
+      );
+    }
+    if (searchTerm.trim() !== '') {
+      const q = searchTerm.toLowerCase();
+      result = result.filter(
+        (a) =>
+          (a.title || '').toLowerCase().includes(q) ||
+          (a.shortDescription || '').toLowerCase().includes(q) ||
+          (a.author || '').toLowerCase().includes(q)
+      );
+    }
+    setFilteredArticles(result);
+  }, [searchTerm, activeTag, articles]);
 
   return (
-    <>
+    <div className="blog-page-root">
       <Header />
-      <main className="blog-page">
-        <div className="blog-container">
+      
+      <main className="blog-main">
+        <div className="ambient-glow-center" style={{ top: '15%' }} />
 
-          {showPopup && (
-            <div className="blog-popup-overlay">
-              <div className="blog-popup">
-                <div className="blog-popup-icon">
-                  <Search size={28} />
-                </div>
-                <h3 className="blog-popup-title">Coming Soon</h3>
-                <p className="blog-popup-text">
-                  The search feature is currently under development.<br />
-                  Stay tuned, it's coming soon!
-                </p>
-                <div className="blog-popup-bar">
-                  <div className="blog-popup-bar-fill" />
-                </div>
-                <button className="blog-popup-close" onClick={() => setShowPopup(false)}>
-                  <X size={16} />
-                  <span>Close</span>
-                </button>
+        <div className="container blog-container">
+          
+          {/* Hero Header */}
+          <div className="blog-hero-header">
+            <div className="section-badge">
+              <span className="section-badge-dot" />
+              <span>Community Knowledge Base</span>
+            </div>
+            <h1 className="blog-page-title">Technical Articles & Breakdowns</h1>
+            <p className="blog-page-sub">
+              Explore battle-tested techniques, architecture blueprints, and hands-on lessons written by working software engineers.
+            </p>
+
+            {/* Actions Bar */}
+            <div className="blog-controls-bar">
+              {/* Search input */}
+              <div className="blog-search-box">
+                <Search size={16} className="search-icon" />
+                <input
+                  type="text"
+                  placeholder="Search articles by title, topic, or author..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="blog-search-input"
+                />
+              </div>
+
+              {/* Action buttons */}
+              <div className="blog-action-buttons">
+                <Link to="/myArticles" className="btn-gradient-v2 blog-action-btn">
+                  <BookOpen size={15} />
+                  <span>My Articles</span>
+                </Link>
+                <Link to="/createArticle" className="btn-gradient-v1 blog-action-btn">
+                  <PlusCircle size={15} />
+                  <span>Publish Article</span>
+                </Link>
               </div>
             </div>
-          )}
 
-          <div className="blog-header">
-            <div className="blog-actions">
-              <button className="blog-btn blog-btn-secondary" onClick={handleSearchClick}>
-                <Search size={16} />
-                <span>Search</span>
-              </button>
-              <Link to="/myArticles" className="blog-btn blog-btn-secondary">
-                <BookOpen size={16} />
-                <span>My Articles</span>
-              </Link>
-              <Link to="/createArticle" className="blog-btn blog-btn-primary">
-                <PlusCircle size={16} />
-                <span>Add Article</span>
-              </Link>
-            </div>
-            <div className="blog-header-text">
-              <h1>All Articles</h1>
-              <p>Discover in-depth technical content from the community</p>
+            {/* Tag Filter Pills */}
+            <div className="blog-tags-row">
+              {tags.map((tag) => (
+                <button
+                  key={tag}
+                  className={`blog-tag-pill ${activeTag === tag ? 'blog-tag-pill--active' : ''}`}
+                  onClick={() => setActiveTag(tag)}
+                >
+                  {tag}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="blog-grid">
+          {/* Grid */}
+          <div className="blog-grid-section">
             {loading ? (
-              <p>Chargement des articles...</p>
-            ) : articles.length > 0 ? (
-              articles.map((article) => (
-                <Article key={article._id} article={article} />
-              ))
+              <div className="blog-loading-grid">
+                {[1, 2, 3, 4, 5, 6].map((n) => (
+                  <div key={n} className="framer-card blog-skeleton-card" />
+                ))}
+              </div>
+            ) : filteredArticles.length > 0 ? (
+              <div className="blog-articles-grid">
+                {filteredArticles.map((article) => (
+                  <Article key={article._id} article={article} />
+                ))}
+              </div>
             ) : (
-              <p>Aucun article pour le moment. Soyez le premier à publier !</p>
+              <div className="framer-card blog-no-results">
+                <Layers size={40} color="#a855f7" />
+                <h3>No articles found</h3>
+                <p>Try adjusting your search criteria or filter tags.</p>
+                <button
+                  className="btn-gradient-v2"
+                  onClick={() => {
+                    setSearchTerm('');
+                    setActiveTag('All');
+                  }}
+                >
+                  Reset Filters
+                </button>
+              </div>
             )}
           </div>
 
         </div>
       </main>
+
       <Footer />
-    </>
+    </div>
   );
 }
 

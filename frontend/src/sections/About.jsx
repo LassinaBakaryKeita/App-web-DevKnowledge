@@ -1,79 +1,87 @@
 import './About.css';
-import { Sparkles, Brain, Users, Rocket, Unlock, ArrowRight } from 'lucide-react';
+import { Sparkles, Layers, Users, TrendingUp, ShieldCheck, ArrowRight, Share2, BookOpen, GitBranch } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 function About() {
-  const values = [
+  const pillars = [
     {
-      icon: <Brain size={20} className="text-indigo-600" />,
-      title: 'Deep Technical Content',
-      desc: 'We prioritize substance over surface-level tutorials.'
+      icon: <Layers size={22} color="#a855f7" />,
+      title: 'Architectural Depth',
+      desc: 'Substantive deep-dives and engineering breakdowns over superficial introductory tutorials.',
     },
     {
-      icon: <Users size={20} className="text-cyan-600" />,
-      title: 'Community First',
-      desc: 'Built around peer feedback and knowledge exchange.'
+      icon: <Share2 size={22} color="#38bdf8" />,
+      title: 'Peer Knowledge Sharing',
+      desc: 'Every engineer has valuable lessons from production systems that can unblock others.',
     },
     {
-      icon: <Rocket size={20} className="text-violet-600" />,
-      title: 'Career Growth',
-      desc: 'Writing publicly accelerates your professional visibility.'
+      icon: <TrendingUp size={22} color="#34d399" />,
+      title: 'Accelerate Engineering Growth',
+      desc: 'Writing publicly refines your mental models and builds recognition within the industry.',
     },
     {
-      icon: <Unlock size={20} className="text-emerald-600" />,
-      title: 'Open & Inclusive',
-      desc: 'Every developer — junior or staff — has a voice here.'
+      icon: <ShieldCheck size={22} color="#f472b6" />,
+      title: 'Open & Unpaywalled',
+      desc: 'Accessible to all developers — from juniors building foundations to staff engineers designing scale.',
     },
   ];
 
   return (
-    <section className="about">
-      <div className="about-inner">
+    <section className="section-wrapper about-section">
+      <div className="section-divider-line section-divider-top" />
+      <div className="ambient-glow-center" style={{ top: '20%' }} />
 
-        {/* Left: Text */}
-        <div className="about-content">
-          <span className="about-label">
-            <Sparkles size={14} />
-            <span>Our Mission</span>
-          </span>
-
+      <div className="container about-container">
+        
+        {/* Section Header */}
+        <div className="about-header">
+          <div className="section-badge">
+            <span className="section-badge-dot" />
+            <span>Why DevKnowledge Exists</span>
+          </div>
           <h2 className="about-title">
-            A knowledge hub built by engineers, for engineers
+            Built on the belief that real engineering knowledge <br className="desktop-break" />
+            should be shared freely and discovered easily
           </h2>
-
-          <p className="about-body">
-            DevKnowledge was created out of frustration with shallow content and paywalled resources. We believe that the best technical knowledge lives in the heads of working engineers and it deserves a place to be shared freely and discovered easily.
+          <p className="about-subtitle">
+            Most breakthroughs in software development happen during hard-fought debugging sessions and production scaling challenges. DevKnowledge gives engineers a dedicated space to document those insights for everyone.
           </p>
-
-          <p className="about-body">
-            Whether you're deep in systems design, exploring new frameworks, or sharing hard-won debugging stories, DevKnowledge gives you a professional platform to write, get feedback, and build your reputation in the developer community.
-          </p>
-
-          <p className="about-body">
-            We're a growing community of software engineers across all disciplines : backend, frontend, DevOps, ML, and beyond united by a love of learning and a commitment to sharing what we know.
-          </p>
-
-          <a href="/about" className="about-cta">
-            <span>Learn more about us</span>
-            <ArrowRight size={16} />
-          </a>
         </div>
 
-        {/* Right: Value cards */}
-        <div className="about-values">
-          {values.map((v, i) => (
-            <div className="about-value-card" key={i}>
-              <div className="about-value-icon">{v.icon}</div>
-              <div className="about-value-title">{v.title}</div>
-              <div className="about-value-desc">{v.desc}</div>
+        {/* 4 Pillars Grid */}
+        <div className="about-grid">
+          {pillars.map((pillar, idx) => (
+            <div className="framer-card about-card" key={idx}>
+              <div className="about-card-icon-wrap">
+                {pillar.icon}
+              </div>
+              <h3 className="about-card-title">{pillar.title}</h3>
+              <p className="about-card-desc">{pillar.desc}</p>
             </div>
           ))}
         </div>
 
+        {/* Bottom Banner */}
+        <div className="about-banner framer-card">
+          <div className="about-banner-text">
+            <div className="about-banner-headline">
+              <BookOpen size={20} color="#c084fc" />
+              <span>Join our growing collective of software authors and learners</span>
+            </div>
+            <p className="about-banner-sub">
+              Whether you are working with Distributed Systems, TypeScript, Go, Rust, or DevOps, your perspective matters.
+            </p>
+          </div>
+          <Link to="/blog" className="btn-gradient-v2 about-banner-btn">
+            <span>Explore The Community</span>
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+
       </div>
+      <div className="section-divider-line section-divider-bottom" />
     </section>
   );
 }
 
 export default About;
-
-
