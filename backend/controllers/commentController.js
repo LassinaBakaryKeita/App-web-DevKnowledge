@@ -2,11 +2,12 @@ const commentModel = require('../models/commentModel');
 
 // Ajouter un commentaire
 module.exports.add = async (req, res) => {
-    const { userId, articleId, commentContain } = req.body;
+    const { userId, articleId, commentContain, content } = req.body;
+    const text = commentContain || content;
 
     try {
-        const comment = await commentModel.create({ userId, articleId, commentContain });
-        res.status(201).json({ comment: comment._id });
+        const comment = await commentModel.create({ userId, articleId, commentContain: text });
+        res.status(201).json({ comment: comment._id, commentData: comment });
     } catch (error) {
         console.log('Erreur lors de l\'enregistrement du commentaire :', error);
         res.status(500).json({ erreur: "Erreur lors de l'enregistrement du commentaire" });
@@ -21,9 +22,20 @@ module.exports.get = async (req, res) => {
     try {
         const comments = await commentModel
             .find({ articleId })
-            .populate('userId', 'name');
+            .populate('userId', 'name')
+            .sort({ createdAt: -1 });
 
-        res.status(200).json({ comments });
+        // Normalize format for frontend convenience
+        const normalized = comments.map(c => ({
+            _id: c._id,
+            userId: c.userId ? c.userId._id : null,
+            userName: c.userId ? c.userId.name : 'Developer',
+            content: c.commentContain,
+            commentContain: c.commentContain,
+            createdAt: c.createdAt,
+        }));
+
+        res.status(200).json(normalized);
     } catch (error) {
         res.status(500).json({ erreur: 'Erreur serveur' });
     }

@@ -147,7 +147,7 @@
   50% { opacity: 0.8; }
 }
 
-.blog-no-results {
+.blog-no-results, .blog-error-state {
   padding: 80px 20px;
   display: flex;
   flex-direction: column;
@@ -157,14 +157,20 @@
   text-align: center;
 }
 
-.blog-no-results h3 {
+.blog-error-state {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.blog-no-results h3, .blog-error-state h3 {
   font-size: 20px;
   color: #ffffff;
 }
 
-.blog-no-results p {
+.blog-no-results p, .blog-error-state p {
   color: var(--text-secondary);
   margin-bottom: 8px;
+  max-width: 480px;
 }
 
 @media (max-width: 992px) {

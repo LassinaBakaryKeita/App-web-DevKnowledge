@@ -22,7 +22,7 @@ function About() {
     {
       icon: <ShieldCheck size={22} color="#f472b6" />,
       title: 'Open & Unpaywalled',
-      desc: 'Accessible to all developers — from juniors building foundations to staff engineers designing scale.',
+      desc: 'Accessible to all developers from juniors building foundations to staff engineers designing scale.',
     },
   ];
 
@@ -32,7 +32,7 @@ function About() {
       <div className="ambient-glow-center" style={{ top: '20%' }} />
 
       <div className="container about-container">
-        
+
         {/* Section Header */}
         <div className="about-header">
           <div className="section-badge">

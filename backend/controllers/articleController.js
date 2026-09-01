@@ -25,7 +25,7 @@ const uploadToCloudinary = (fileBuffer, filename) => {
 
 // Création d'un article
 module.exports.createArticle = async (req, res) => {
-    const { title, author, shortDescription, fullDescription, userId } = req.body;
+    const { title, author, shortDescription, fullDescription, tag, userId } = req.body;
 
     try {
         let imageUrl = null;
@@ -37,6 +37,7 @@ module.exports.createArticle = async (req, res) => {
 
         const newArticle = await articleModel.create({
             title, author, shortDescription, fullDescription,
+            tag: tag || 'Architecture',
             image: imageUrl,
             userId,
         });
@@ -48,10 +49,15 @@ module.exports.createArticle = async (req, res) => {
     }
 };
 
-// Récupérer tous les articles
+// Récupérer tous les articles (avec filtre optionnel par tag)
 module.exports.getAllArticles = async (req, res) => {
     try {
-        const articles = await articleModel.find().sort({ createdAt: -1 });
+        const { tag } = req.query;
+        let query = {};
+        if (tag && tag !== 'All') {
+            query = { tag: new RegExp(`^${tag}$`, 'i') };
+        }
+        const articles = await articleModel.find(query).sort({ createdAt: -1 });
         res.status(200).json(articles);
     } catch (error) {
         console.error('getAllArticles error:', error.message);
@@ -74,9 +80,12 @@ module.exports.getMyArticles = async (req, res) => {
 // Mise à jour d'un article
 module.exports.updateArticle = async (req, res) => {
     const { articleId } = req.params;
-    const { title, author, shortDescription, fullDescription, userId } = req.body;
+    const { title, author, shortDescription, fullDescription, tag, userId } = req.body;
 
     const fieldsToUpdate = { title, author, shortDescription, fullDescription, userId };
+    if (tag) {
+        fieldsToUpdate.tag = tag;
+    }
 
     try {
         // Si une nouvelle image est envoyée, on l'uploade sur Cloudinary

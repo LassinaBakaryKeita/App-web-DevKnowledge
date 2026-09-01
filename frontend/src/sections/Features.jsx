@@ -10,7 +10,7 @@ const featureList = [
   {
     icon: <Search size={22} color="#38bdf8" />,
     title: 'Precision Topic Tagging',
-    desc: 'Categorize by ecosystem — from React and TypeScript to Docker, Kubernetes, Rust, and Backend architectures.',
+    desc: 'Categorize by ecosystem from React and TypeScript to Docker, Kubernetes, Rust, and Backend architectures.',
   },
   {
     icon: <MessageSquareCode size={22} color="#34d399" />,
@@ -30,7 +30,7 @@ const featureList = [
   {
     icon: <Cpu size={22} color="#6366f1" />,
     title: 'Engineered for Performance',
-    desc: 'Blazing fast load times, zero paywalls, no distracting popups — just pure developer knowledge.',
+    desc: 'Blazing fast load times, zero paywalls, no distracting popups  just pure developer knowledge.',
   },
 ];
 
@@ -41,7 +41,7 @@ function Features() {
       <div className="ambient-glow-center" style={{ top: '40%' }} />
 
       <div className="container features-container">
-        
+
         {/* Header */}
         <div className="features-header">
           <div className="section-badge">

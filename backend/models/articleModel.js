@@ -36,6 +36,10 @@ const articleSchema = new mongoose.Schema(
             minLength: 500,
             maxLength: 100000,
         },
+        tag: {
+            type: String,
+            default: 'Architecture',
+        },
         likes: {
             type: Number,
             default: 0,

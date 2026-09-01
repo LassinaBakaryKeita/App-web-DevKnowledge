@@ -11,8 +11,17 @@ const commentRoute = require('../routes/commentRoutes');
 
 const app = express();
 
-//Connexion à la base de donnée
-connectDB();
+// Middleware ensuring DB connection before handling API routes
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error('Database connection error in request middleware:', err.message);
+        res.status(500).json({ error: 'Database connection failed' });
+    }
+});
+
 
 // Middlewares
 const allowedOrigins = [

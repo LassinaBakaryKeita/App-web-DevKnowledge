@@ -3,7 +3,7 @@ import Article from '../components/Article';
 import { Sparkles, ArrowRight, BookOpen, Layers } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-function LatestArticles({ articles = [] }) {
+function LatestArticles({ articles = [], loading = false, error = null }) {
   return (
     <section className="section-wrapper latest-articles-section">
       <div className="ambient-glow-center" style={{ top: '20%' }} />
@@ -31,15 +31,31 @@ function LatestArticles({ articles = [] }) {
 
         {/* Dynamic Articles Grid */}
         <div className="latest-articles-grid">
-          {articles && articles.length > 0 ? (
+          {loading ? (
+            [1, 2, 3].map((n) => (
+              <div key={n} className="framer-card latest-skeleton-card" />
+            ))
+          ) : error ? (
+            <div className="latest-empty-state framer-card latest-error-card">
+              <Layers size={36} color="#ef4444" />
+              <h3>Unable to load latest articles</h3>
+              <p>{error}</p>
+              <Link to="/blog" className="btn-gradient-v2">
+                <span>Explore Blog Directly</span>
+              </Link>
+            </div>
+          ) : articles && articles.length > 0 ? (
             articles.map((article) => (
               <Article key={article._id || article.id} article={article} />
             ))
           ) : (
             <div className="latest-empty-state framer-card">
               <BookOpen size={36} color="#a855f7" />
-              <h3>Loading articles...</h3>
-              <p>Fetching real developer publications from DevKnowledge community.</p>
+              <h3>No articles published yet</h3>
+              <p>Be the first contributor to share technical knowledge with the DevKnowledge community.</p>
+              <Link to="/createArticle" className="btn-gradient-v1">
+                <span>Write First Article</span>
+              </Link>
             </div>
           )}
         </div>

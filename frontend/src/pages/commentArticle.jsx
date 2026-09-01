@@ -26,10 +26,12 @@ function CommentArticle() {
 
     const fetchComments = async () => {
       try {
-        const res = await fetch(`${API_BASE}/api/comment/all/${articleId}`);
+        const res = await fetch(`${API_BASE}/api/comment/get/${articleId}`);
         const data = await res.json();
         if (Array.isArray(data)) {
           setComments(data);
+        } else if (data && Array.isArray(data.comments)) {
+          setComments(data.comments);
         }
       } catch (err) {
         console.error('Error loading comments:', err);
@@ -53,7 +55,7 @@ function CommentArticle() {
 
     setSubmitting(true);
     try {
-      const res = await fetch(`${API_BASE}/api/comment/create`, {
+      const res = await fetch(`${API_BASE}/api/comment/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,14 +64,21 @@ function CommentArticle() {
         body: JSON.stringify({
           articleId,
           userId,
-          userName: userName || 'Developer',
+          commentContain: newComment,
           content: newComment,
         }),
       });
 
       if (res.ok) {
-        const savedComment = await res.json();
-        setComments([...comments, savedComment.comment || savedComment]);
+        const saved = await res.json();
+        const newObj = {
+          _id: saved.comment || Date.now().toString(),
+          userId,
+          userName: userName || 'Developer',
+          content: newComment,
+          createdAt: new Date().toISOString(),
+        };
+        setComments([newObj, ...comments]);
         setNewComment('');
       }
     } catch (err) {

@@ -1,44 +1,53 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Article from '../components/Article';
 import './Blog.css';
 import { Link } from 'react-router-dom';
-import { Search, BookOpen, PlusCircle, Filter, Sparkles, Code2, Layers } from 'lucide-react';
+import { Search, BookOpen, PlusCircle, Layers, AlertCircle, RefreshCw } from 'lucide-react';
 import { API_BASE } from '../config/api';
 
 function Blog() {
   const [articles, setArticles] = useState([]);
   const [filteredArticles, setFilteredArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTag, setActiveTag] = useState('All');
 
   const tags = ['All', 'Architecture', 'TypeScript', 'Backend', 'React', 'DevOps', 'Distributed Systems'];
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const res = await fetch(`${API_BASE}/api/article/all`);
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          setArticles(data);
-          setFilteredArticles(data);
-        }
-      } catch (error) {
-        console.error('Error loading articles:', error);
-      } finally {
-        setLoading(false);
+  const fetchArticles = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_BASE}/api/article/all`);
+      if (!res.ok) {
+        throw new Error(`Server returned status ${res.status}: Failed to retrieve articles`);
       }
-    };
-    fetchArticles();
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setArticles(data);
+      } else {
+        throw new Error('Received unexpected data format from articles API');
+      }
+    } catch (err) {
+      console.error('Error loading articles:', err);
+      setError(err.message || 'Unable to connect to DevKnowledge servers. Please check connection and try again.');
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchArticles();
+  }, [fetchArticles]);
 
   useEffect(() => {
     let result = articles;
     if (activeTag !== 'All') {
       result = result.filter(
-        (a) => (a.tag || '').toLowerCase() === activeTag.toLowerCase()
+        (a) => (a.tag || 'Architecture').toLowerCase() === activeTag.toLowerCase()
       );
     }
     if (searchTerm.trim() !== '') {
@@ -114,13 +123,23 @@ function Blog() {
             </div>
           </div>
 
-          {/* Grid */}
+          {/* Grid Section with 4 distinct states: Loading, Error, Empty, and Success */}
           <div className="blog-grid-section">
             {loading ? (
               <div className="blog-loading-grid">
                 {[1, 2, 3, 4, 5, 6].map((n) => (
                   <div key={n} className="framer-card blog-skeleton-card" />
                 ))}
+              </div>
+            ) : error ? (
+              <div className="framer-card blog-error-state">
+                <AlertCircle size={42} color="#ef4444" />
+                <h3>Failed to load articles</h3>
+                <p>{error}</p>
+                <button className="btn-gradient-v1" onClick={fetchArticles}>
+                  <RefreshCw size={15} />
+                  <span>Retry Connection</span>
+                </button>
               </div>
             ) : filteredArticles.length > 0 ? (
               <div className="blog-articles-grid">
@@ -132,16 +151,27 @@ function Blog() {
               <div className="framer-card blog-no-results">
                 <Layers size={40} color="#a855f7" />
                 <h3>No articles found</h3>
-                <p>Try adjusting your search criteria or filter tags.</p>
-                <button
-                  className="btn-gradient-v2"
-                  onClick={() => {
-                    setSearchTerm('');
-                    setActiveTag('All');
-                  }}
-                >
-                  Reset Filters
-                </button>
+                <p>
+                  {articles.length === 0
+                    ? 'There are no published articles in the platform yet. Be the first to share knowledge!'
+                    : 'No articles match your current search query or topic filter.'}
+                </p>
+                {articles.length === 0 ? (
+                  <Link to="/createArticle" className="btn-gradient-v1">
+                    <PlusCircle size={15} />
+                    <span>Publish First Article</span>
+                  </Link>
+                ) : (
+                  <button
+                    className="btn-gradient-v2"
+                    onClick={() => {
+                      setSearchTerm('');
+                      setActiveTag('All');
+                    }}
+                  >
+                    Reset Filters
+                  </button>
+                )}
               </div>
             )}
           </div>
