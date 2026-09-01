@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useParams, Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import './detailedInformationArticle.css';
@@ -178,9 +180,9 @@ function DetailedInformationArticle() {
           <div className="framer-card detail-body-card">
             <div className="detail-prose">
               {article.fullDescription ? (
-                article.fullDescription.split('\n').map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {article.fullDescription}
+                </ReactMarkdown>
               ) : (
                 <p>No full content provided for this article.</p>
               )}
