@@ -7,6 +7,7 @@ import Footer from '../components/Footer';
 import './detailedInformationArticle.css';
 import { ArrowLeft, User, Calendar, Tag, Heart, MessageSquare, Share2, Sparkles, FileText } from 'lucide-react';
 import { API_BASE, getStoredUser } from '../config/api';
+import ShareArticle from '../components/ShareArticle';
 
 function DetailedInformationArticle() {
   const { id } = useParams();
@@ -164,6 +165,11 @@ function DetailedInformationArticle() {
                   <MessageSquare size={15} />
                   <span>Comments</span>
                 </Link>
+
+                <ShareArticle
+                  article={article}
+                  variant="detail"
+                />
               </div>
             </div>
 

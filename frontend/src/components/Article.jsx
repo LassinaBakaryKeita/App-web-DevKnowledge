@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react';
 import './Article.css';
 import { Heart, MessageSquare, ArrowRight, FileCode2, Clock, Calendar } from 'lucide-react';
 import { API_BASE, getStoredUser } from '../config/api';
+import ShareArticle from './ShareArticle';
 
 function Article({ article }) {
   const navigate = useNavigate();
+  const [isShareOpen, setIsShareOpen] = useState(false);
   const {
     _id,
     title = 'Untitled Article',
@@ -114,7 +116,7 @@ function Article({ article }) {
     : 'Recent';
 
   return (
-    <article className="framer-card article-card">
+    <article className={`framer-card article-card ${isShareOpen ? 'has-share-open' : ''}`}>
       
       {/* Image / Header Wrap */}
       <div className="article-card-media">
@@ -184,6 +186,12 @@ function Article({ article }) {
               <MessageSquare size={15} />
               <span>{commentsCount}</span>
             </button>
+
+            <ShareArticle
+              article={article}
+              variant="card"
+              onOpenChange={setIsShareOpen}
+            />
           </div>
 
           <Link to={`/article/${_id}`} state={{ article }} className="article-read-link">
