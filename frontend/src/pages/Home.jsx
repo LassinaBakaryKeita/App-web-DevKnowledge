@@ -15,8 +15,6 @@ function Home() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
     fetch(`${API_BASE}/api/article/all`)
       .then((res) => {
         if (!res.ok) {

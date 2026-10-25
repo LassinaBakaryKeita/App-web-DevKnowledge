@@ -18,7 +18,6 @@ function Article({ article }) {
     image = '',
     likes = 0,
     comments = 0,
-    readTime = '5 min read',
   } = article || {};
 
   const [likesCount, setLikesCount] = useState(likes || 0);

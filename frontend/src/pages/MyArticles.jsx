@@ -8,11 +8,10 @@ import { API_BASE, getStoredUser } from '../config/api';
 
 function MyArticles() {
   const navigate = useNavigate();
-  const { token, userId, userName } = getStoredUser();
+  const { token, userId } = getStoredUser();
 
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
     if (!token || !userId) {

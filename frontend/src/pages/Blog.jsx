@@ -6,6 +6,7 @@ import './Blog.css';
 import { Link } from 'react-router-dom';
 import { Search, BookOpen, PlusCircle, Layers, AlertCircle, RefreshCw } from 'lucide-react';
 import { API_BASE } from '../config/api';
+import { BLOG_FEATURED_TAGS, matchArticleTag } from '../config/categories';
 
 function Blog() {
   const [articles, setArticles] = useState([]);
@@ -15,7 +16,8 @@ function Blog() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTag, setActiveTag] = useState('All');
 
-  const tags = ['All', 'Architecture', 'TypeScript', 'Backend', 'React', 'DevOps', 'Distributed Systems'];
+  // Exactly 7 total filter entries, including 'All'
+  const tags = BLOG_FEATURED_TAGS;
 
   const fetchArticles = useCallback(async () => {
     setLoading(true);
@@ -46,9 +48,7 @@ function Blog() {
   useEffect(() => {
     let result = articles;
     if (activeTag !== 'All') {
-      result = result.filter(
-        (a) => (a.tag || 'Architecture').toLowerCase() === activeTag.toLowerCase()
-      );
+      result = result.filter((a) => matchArticleTag(a.tag, activeTag));
     }
     if (searchTerm.trim() !== '') {
       const q = searchTerm.toLowerCase();
@@ -56,7 +56,8 @@ function Blog() {
         (a) =>
           (a.title || '').toLowerCase().includes(q) ||
           (a.shortDescription || '').toLowerCase().includes(q) ||
-          (a.author || '').toLowerCase().includes(q)
+          (a.author || '').toLowerCase().includes(q) ||
+          (a.tag || '').toLowerCase().includes(q)
       );
     }
     setFilteredArticles(result);
@@ -65,12 +66,12 @@ function Blog() {
   return (
     <div className="blog-page-root">
       <Header />
-      
+
       <main className="blog-main">
         <div className="ambient-glow-center" style={{ top: '15%' }} />
 
         <div className="container blog-container">
-          
+
           {/* Hero Header */}
           <div className="blog-hero-header">
             <div className="section-badge">
